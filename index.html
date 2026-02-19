@@ -1,639 +1,682 @@
-
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Préstamos Multi-Tipo</title>
+    <title>Calculadora de Prestamos Universal</title>
     <style>
+        :root {
+            --bg-1: #0b2742;
+            --bg-2: #0f4c6e;
+            --bg-3: #1f7a8c;
+            --card: #ffffff;
+            --card-2: #f7fbff;
+            --text: #112035;
+            --muted: #4f5f74;
+            --line: #d7e1ec;
+            --primary: #006d77;
+            --primary-2: #00a3b0;
+            --danger: #b42318;
+            --warning: #b54708;
+            --success: #027a48;
+            --radius: 16px;
+            --shadow: 0 16px 34px rgba(6, 26, 49, 0.15);
+        }
+
         * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
+        }
+
+        html,
+        body {
+            min-height: 100%;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
+            font-family: "Segoe UI", "Arial", sans-serif;
+            background:
+                radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.18), transparent 45%),
+                radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.1), transparent 45%),
+                linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%);
+            color: var(--text);
+            padding: clamp(10px, 1.8vw, 20px);
         }
 
-        .container {
-            max-width: 1400px;
+        [hidden],
+        .hidden {
+            display: none !important;
+        }
+
+        .app-shell {
+            width: min(1280px, 100%);
             margin: 0 auto;
         }
 
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        .app-header {
+            margin-bottom: 18px;
+            color: #ffffff;
+        }
+
+        .app-header h1 {
+            font-size: clamp(1.45rem, 2.1vw, 2.25rem);
+            line-height: 1.2;
+        }
+
+        .app-header p {
+            margin-top: 8px;
+            font-size: clamp(0.9rem, 1.1vw, 1.02rem);
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .main-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
+            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
+            gap: clamp(14px, 1.8vw, 22px);
+            align-items: start;
         }
 
-        @media (max-width: 900px) {
-            .main-grid {
-                grid-template-columns: 1fr;
-            }
+        .panel-right {
+            display: grid;
+            gap: clamp(14px, 1.6vw, 20px);
+            align-content: start;
         }
 
         .card {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: var(--card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: clamp(14px, 2.2vw, 24px);
         }
 
         .card h2 {
-            color: #333;
-            margin-bottom: 20px;
-            font-size: 1.5em;
-            border-bottom: 3px solid #667eea;
-            padding-bottom: 10px;
+            font-size: clamp(1.05rem, 1.45vw, 1.35rem);
+            margin-bottom: 14px;
+            color: var(--text);
         }
 
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 600;
-            font-size: 0.95em;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: all 0.3s;
-        }
-
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 10px;
-            font-size: 1.1em;
-            cursor: pointer;
-            width: 100%;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-bottom: 10px;
-        }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
-        }
-
-        .btn-secondary {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-        }
-
-        .clear-btn {
-            background: #dc3545;
-        }
-
-        .clear-btn:hover {
-            background: #c82333;
-        }
-
-        .results {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-top: 25px;
-            display: none;
-        }
-
-        .results.active {
-            display: block;
-            animation: slideIn 0.5s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .result-item {
-            background: rgba(255,255,255,0.2);
-            padding: 15px;
+        .feedback {
             border-radius: 12px;
-            margin-bottom: 15px;
-            backdrop-filter: blur(10px);
+            padding: 11px 12px;
+            margin-bottom: 14px;
+            font-size: 0.92rem;
+            line-height: 1.3;
         }
 
-        .result-label {
-            font-size: 0.9em;
-            opacity: 0.9;
-            margin-bottom: 5px;
+        .feedback.error {
+            background: #fef3f2;
+            border: 1px solid #fecdca;
+            color: var(--danger);
         }
 
-        .result-value {
-            font-size: 1.8em;
-            font-weight: bold;
+        .feedback.success {
+            background: #ecfdf3;
+            border: 1px solid #abefc6;
+            color: var(--success);
         }
 
-        .result-value.small {
-            font-size: 1.3em;
-        }
-
-        .highlight {
-            background: rgba(255,215,0,0.3);
-            border: 2px solid gold;
-        }
-
-        .tabs {
-            display: flex;
+        .tipo-selector {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            margin-bottom: 14px;
         }
 
-        .tab {
-            padding: 10px 20px;
-            border-radius: 8px;
+        .tipo-option {
+            border: 2px solid var(--line);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: left;
+            background: #fff;
+            color: var(--text);
             cursor: pointer;
-            background: #e0e0e0;
-            border: none;
-            font-weight: 600;
-            transition: all 0.3s;
+            transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
         }
 
-        .tab.active {
-            background: #667eea;
-            color: white;
-        }
-
-        .tab-content {
-            display: none;
-        }
-
-        .tab-content.active {
+        .tipo-option strong {
             display: block;
+            font-size: 0.96rem;
+            margin-bottom: 4px;
         }
 
-        .info-box {
-            background: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.9em;
+        .tipo-option span {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--muted);
+            line-height: 1.25;
         }
 
-        .info-box.success {
-            background: #d4edda;
-            border-left-color: #28a745;
+        .tipo-option.active {
+            border-color: var(--primary);
+            background: #eef9fa;
         }
 
-        .info-box.primary {
-            background: #cce5ff;
-            border-left-color: #007bff;
+        .tipo-option:hover {
+            transform: translateY(-1px);
         }
 
         .input-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        @media (max-width: 600px) {
-            .input-row {
-                grid-template-columns: 1fr;
-            }
+        .input-group {
+            display: grid;
+            gap: 5px;
+        }
+
+        .input-group label {
+            font-size: 0.86rem;
+            font-weight: 600;
+            color: var(--muted);
+        }
+
+        input,
+        select,
+        textarea,
+        button {
+            font: inherit;
+        }
+
+        input,
+        select,
+        textarea {
+            width: 100%;
+            border: 2px solid var(--line);
+            border-radius: 10px;
+            padding: 10px 11px;
+            min-height: 42px;
+            color: var(--text);
+            background: #fff;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus,
+        button:focus-visible {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0, 109, 119, 0.16);
+        }
+
+        .info-box {
+            border-radius: 12px;
+            padding: 11px 12px;
+            font-size: 0.86rem;
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+
+        .info-box.primary {
+            background: #eff8ff;
+            color: #175cd3;
+            border: 1px solid #b2ddff;
+        }
+
+        .info-box.success {
+            background: #ecfdf3;
+            color: var(--success);
+            border: 1px solid #abefc6;
+        }
+
+        .btn-row {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            min-height: 42px;
+            padding: 10px 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            filter: brightness(0.98);
+        }
+
+        .btn-primary {
+            color: #fff;
+            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-2) 100%);
+        }
+
+        .btn-secondary {
+            color: #073143;
+            background: #d6f4f7;
+            border: 1px solid #9fdee5;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background: #c43227;
+        }
+
+        .hint {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 0.82rem;
+        }
+
+        .results {
+            color: #fff;
+            background: linear-gradient(140deg, #005f73 0%, #0a9396 52%, #26c6da 100%);
+            position: sticky;
+            top: 10px;
+        }
+
+        .results h2 {
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+            padding-bottom: 10px;
+            margin-bottom: 10px;
+        }
+
+        .result-grid {
+            display: grid;
+            gap: 8px;
+        }
+
+        .result-item {
+            background: rgba(255, 255, 255, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
+            padding: 10px;
+        }
+
+        .result-label {
+            font-size: 0.8rem;
+            opacity: 0.92;
+            margin-bottom: 4px;
+        }
+
+        .result-value {
+            font-size: 1.45rem;
+            font-weight: 700;
+        }
+
+        .result-value.small {
+            font-size: 1rem;
+            font-weight: 600;
+            line-height: 1.35;
+        }
+
+        .result-item.highlight {
+            border-color: rgba(255, 255, 255, 0.68);
+            background: rgba(255, 255, 255, 0.24);
         }
 
         .progress-bar {
             width: 100%;
-            height: 20px;
-            background: rgba(255,255,255,0.3);
-            border-radius: 10px;
+            height: 12px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.3);
             overflow: hidden;
-            margin-top: 10px;
+            margin-top: 8px;
         }
 
         .progress-fill {
+            width: 0%;
             height: 100%;
-            background: white;
-            transition: width 0.5s ease;
+            background: #fff;
+            transition: width 0.3s ease;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 999px;
+            padding: 4px 9px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+        }
+
+        .status-ok {
+            color: #065f46;
+            background: #d1fae5;
+        }
+
+        .status-late {
+            color: #7a271a;
+            background: #fee4e2;
+        }
+
+        .status-done {
+            color: #164e63;
+            background: #cffafe;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 10px;
+            border: 1px solid var(--line);
         }
 
         .schedule-table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 0.9em;
+            font-size: 0.87rem;
+            min-width: 520px;
         }
 
-        .schedule-table th, .schedule-table td {
-            padding: 8px;
+        .schedule-table th,
+        .schedule-table td {
             text-align: left;
-            border-bottom: 1px solid #ddd;
+            padding: 9px 10px;
+            border-bottom: 1px solid var(--line);
         }
 
         .schedule-table th {
-            background: #667eea;
-            color: white;
+            background: #f0f7ff;
+            color: #123e7a;
+            font-size: 0.82rem;
+            letter-spacing: 0.01em;
+            text-transform: uppercase;
         }
 
-        .schedule-table tr.paid {
-            background: #d4edda;
+        .row-paid {
+            background: #eefdf3;
         }
 
-        .schedule-table tr.pending {
-            background: #fff3cd;
+        .row-overdue {
+            background: #fff6f5;
         }
 
-        .schedule-table tr.future {
-            background: #f8f9fa;
+        .row-due {
+            background: #fffaeb;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.75em;
-            font-weight: bold;
+        .row-future {
+            background: #f8fafc;
         }
 
-        .badge-paid {
-            background: #28a745;
-            color: white;
-        }
-
-        .badge-pending {
-            background: #ffc107;
-            color: #000;
-        }
-
-        .badge-future {
-            background: #6c757d;
-            color: white;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .payment-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .payment-input input {
-            flex: 1;
-        }
-
-        .payment-input button {
-            background: #dc3545;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .add-payment-btn {
-            background: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .tipo-prestamo-selector {
+        .history-list {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .tipo-option {
-            border: 2px solid #e0e0e0;
-            border-radius: 12px;
-            padding: 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .tipo-option:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-        }
-
-        .tipo-option.selected {
-            border-color: #667eea;
-            background: #f0f3ff;
-        }
-
-        .tipo-option h3 {
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .tipo-option p {
-            font-size: 0.85em;
-            color: #666;
-        }
-
-        .history {
-            margin-top: 30px;
+            gap: 8px;
         }
 
         .history-item {
-            background: #f8f9fa;
-            padding: 15px;
+            border: 1px solid var(--line);
             border-radius: 10px;
-            margin-bottom: 10px;
-            border-left: 4px solid #667eea;
-            cursor: pointer;
-            transition: all 0.2s;
+            padding: 10px;
+            background: var(--card-2);
+            display: grid;
+            gap: 8px;
         }
 
-        .history-item:hover {
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        .history-title {
+            font-size: 0.92rem;
+            color: #1b365d;
+            font-weight: 700;
         }
 
-        .file-drop-zone {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
-            padding: 40px;
+        .history-meta {
+            font-size: 0.79rem;
+            color: var(--muted);
+            line-height: 1.3;
+        }
+
+        .history-actions {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
+        }
+
+        .history-empty {
+            color: var(--muted);
             text-align: center;
-            background: #f8f9ff;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 20px;
+            font-size: 0.9rem;
+            padding: 8px 0;
         }
 
-        .file-drop-zone:hover {
-            background: #eef1ff;
+        .history-tools {
+            margin-top: 10px;
         }
 
-        .quick-calc {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 20px;
+        @media (max-width: 1100px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .results {
+                position: static;
+            }
         }
 
-        .quick-calc h4 {
-            color: #1976d2;
-            margin-bottom: 10px;
+        @media (max-width: 760px) {
+            .tipo-selector,
+            .input-row,
+            .btn-row,
+            .history-actions {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                border-radius: 12px;
+                padding: 12px;
+            }
         }
 
-        .status-indicator {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
+        @media (max-height: 800px) and (min-width: 1101px) {
+            body {
+                padding: 10px;
+            }
+
+            .app-header {
+                margin-bottom: 12px;
+            }
+
+            .card {
+                padding: 12px 14px;
+            }
+
+            .history {
+                max-height: 260px;
+                overflow: auto;
+            }
         }
 
-        .status-current {
-            background: #e3f2fd;
-            color: #1976d2;
-        }
-
-        .status-late {
-            background: #ffebee;
-            color: #c62828;
-        }
-
-        .status-paid {
-            background: #e8f5e9;
-            color: #2e7d32;
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>🏦 Calculadora de Préstamos Universal</h1>
-        
-        <div class="main-grid">
-            <!-- Panel Izquierdo: Entrada de Datos -->
-            <div class="card">
-                <h2>📋 Datos del Préstamo</h2>
+    <div class="app-shell">
+        <header class="app-header">
+            <h1>Calculadora de Prestamos Universal</h1>
+            <p>Compatible con GitHub Pages: sin backend, guardado local y calculos en el navegador.</p>
+        </header>
 
-                <!-- Selector de Tipo de Préstamo -->
-                <div class="tipo-prestamo-selector">
-                    <div class="tipo-option selected" onclick="selectTipo('frecuencia')" id="tipo-frecuencia">
-                        <h3>📅 Por Frecuencia</h3>
-                        <p>Snap Finance, arrendamientos con pagos regulares cada semana/quincena/mes</p>
-                    </div>
-                    <div class="tipo-option" onclick="selectTipo('calendario')" id="tipo-calendario">
-                        <h3>📆 Por Calendario</h3>
-                        <p>CreditNinja, préstamos con fechas de pago específicas en el contrato</p>
-                    </div>
-                </div>
+        <main class="main-grid">
+            <section class="card" aria-labelledby="datosHeading">
+                <h2 id="datosHeading">Datos del prestamo</h2>
 
-                <!-- Datos Comunes -->
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Nombre del Acreedor</label>
-                        <input type="text" id="nombreAcreedor" placeholder="Ej: CreditNinja" value="CreditNinja">
-                    </div>
-                    <div class="input-group">
-                        <label>ID del Contrato / Préstamo #</label>
-                        <input type="text" id="idContrato" placeholder="Ej: 8814712" value="8814712">
-                    </div>
-                </div>
+                <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
 
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Fecha del Préstamo/Acuerdo</label>
-                        <input type="date" id="fechaAcuerdo" value="2025-10-06">
-                    </div>
-                    <div class="input-group">
-                        <label>Fecha Actual (Hoy)</label>
-                        <input type="date" id="fechaActual" value="2026-02-18">
-                    </div>
-                </div>
-
-                <div class="input-row">
-                    <div class="input-group">
-                        <label>Monto Total del Préstamo/Contrato</label>
-                        <input type="number" id="totalPagos" placeholder="2554.14" step="0.01" value="2554.14">
-                    </div>
-                    <div class="input-group">
-                        <label>Monto por Cuota/Pago</label>
-                        <input type="number" id="montoPago" placeholder="134.44" step="0.01" value="134.44">
-                    </div>
-                </div>
-
-                <!-- Modo Frecuencia (Snap Finance style) -->
-                <div id="modo-frecuencia" class="modo-container">
-                    <div class="info-box">
-                        💡 Los pagos se calculan automáticamente según la frecuencia desde la fecha del acuerdo.
-                    </div>
-                    
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label>Frecuencia de Pago</label>
-                            <select id="frecuencia">
-                                <option value="7">Semanal (7 días)</option>
-                                <option value="14" selected>Quincenal (14 días)</option>
-                                <option value="15">Quincenal (15 días)</option>
-                                <option value="30">Mensual (30 días)</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label>Pagos Realizados (Opcional)</label>
-                            <input type="number" id="pagosRealizadosManual" placeholder="Auto-calculado">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Modo Calendario (CreditNinja style) -->
-                <div id="modo-calendario" class="modo-container hidden">
-                    <div class="info-box primary">
-                        📅 Ingresa las fechas de pago exactas del contrato. El sistema calculará cuántos pagos corresponden a la fecha actual.
-                    </div>
-
-                    <div class="input-group">
-                        <label>Primera Fecha de Pago</label>
-                        <input type="date" id="primeraFechaPago" value="2025-10-22">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Número total de pagos según contrato</label>
-                        <input type="number" id="numeroTotalPagos" placeholder="19" value="19">
-                    </div>
-
-                    <div class="input-group">
-                        <label>Monto del último pago (si es diferente)</label>
-                        <input type="number" id="montoUltimoPago" placeholder="134.22" step="0.01" value="134.22">
-                    </div>
-
-                    <div class="quick-calc">
-                        <h4>⚡ Calendario Rápido</h4>
-                        <p>Si los pagos son quincenales (cada 14 días) desde la primera fecha:</p>
-                        <button class="btn btn-secondary" onclick="generarCalendarioAutomatico()" style="margin-top: 10px;">
-                            Generar Calendario Automático
-                        </button>
-                    </div>
-
-                    <div class="input-group">
-                        <label>Fechas de Pago (una por línea, formato: YYYY-MM-DD)</label>
-                        <textarea id="calendarioPagos" rows="8" placeholder="2025-10-22
-2025-11-05
-2025-11-19
-..."></textarea>
-                    </div>
-
-                    <button class="add-payment-btn" onclick="analizarCalendario()">
-                        📊 Analizar Calendario vs Fecha Actual
+                <div class="tipo-selector" role="group" aria-label="Tipo de prestamo">
+                    <button class="tipo-option active" type="button" data-tipo="frecuencia" aria-pressed="true">
+                        <strong>Por frecuencia</strong>
+                        <span>Pagos semanales, quincenales o mensuales.</span>
+                    </button>
+                    <button class="tipo-option" type="button" data-tipo="calendario" aria-pressed="false">
+                        <strong>Por calendario</strong>
+                        <span>Fechas exactas segun contrato.</span>
                     </button>
                 </div>
 
-                <div class="input-group" style="margin-top: 20px;">
-                    <label>Impuestos / Cargos Adicionales (Opcional)</label>
-                    <input type="number" id="taxes" placeholder="0.00" step="0.01" value="0">
-                </div>
-
-                <button class="btn" onclick="calcular()">🧮 Calcular Balance</button>
-                <button class="btn clear-btn" onclick="limpiar()">🗑️ Limpiar Todo</button>
-            </div>
-
-            <!-- Panel Derecho: Resultados -->
-            <div>
-                <div id="results" class="results">
-                    <h2 style="color: white; border-bottom: 2px solid rgba(255,255,255,0.3); padding-bottom: 10px; margin-bottom: 20px;">
-                        📊 Resumen del Préstamo
-                    </h2>
-                    
-                    <div class="result-item">
-                        <div class="result-label">Nombre del Acreedor</div>
-                        <div class="result-value small" id="resNombre">-</div>
-                    </div>
-
-                    <div class="result-item">
-                        <div class="result-label">ID del Contrato</div>
-                        <div class="result-value small" id="resId">-</div>
-                    </div>
-
-                    <div class="result-item" id="resStatusContainer" style="display: none;">
-                        <div class="result-label">Estado del Próximo Pago</div>
-                        <div class="result-value small" id="resStatus">-</div>
-                    </div>
-
-                    <div class="result-item highlight">
-                        <div class="result-label">Balance Actual</div>
-                        <div class="result-value" id="resBalance">$0.00</div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressBar" style="width: 0%"></div>
+                <form id="prestamoForm" novalidate>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="nombreAcreedor">Nombre del acreedor</label>
+                            <input type="text" id="nombreAcreedor" autocomplete="organization">
                         </div>
-                        <div style="font-size: 0.8em; margin-top: 5px;">
-                            <span id="porcentajePagado">0%</span> pagado
+                        <div class="input-group">
+                            <label for="idContrato">ID del contrato</label>
+                            <input type="text" id="idContrato" autocomplete="off">
                         </div>
                     </div>
 
-                    <div class="result-item">
-                        <div class="result-label">Pagos Realizados</div>
-                        <div class="result-value small" id="resPagosRealizados">0 pagos</div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="fechaAcuerdo">Fecha del acuerdo</label>
+                            <input type="date" id="fechaAcuerdo">
+                        </div>
+                        <div class="input-group">
+                            <label for="fechaActual">Fecha actual</label>
+                            <input type="date" id="fechaActual">
+                        </div>
                     </div>
 
-                    <div class="result-item">
-                        <div class="result-label">Total Pagado a la Fecha</div>
-                        <div class="result-value small" id="resTotalPagado">$0.00</div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="totalPagos">Monto total del contrato</label>
+                            <input type="number" id="totalPagos" step="0.01" min="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="montoPago">Monto por cuota</label>
+                            <input type="number" id="montoPago" step="0.01" min="0">
+                        </div>
                     </div>
 
-                    <div class="result-item">
-                        <div class="result-label">Pagos Restantes</div>
-                        <div class="result-value small" id="resPagosRestantes">0 pagos</div>
+                    <section id="modo-frecuencia">
+                        <div class="info-box primary">
+                            Se calcula el numero de pagos esperados desde la fecha de acuerdo.
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="frecuencia">Frecuencia de pago</label>
+                                <select id="frecuencia">
+                                    <option value="7">Semanal (7 dias)</option>
+                                    <option value="14">Quincenal (14 dias)</option>
+                                    <option value="15">Quincenal (15 dias)</option>
+                                    <option value="30">Mensual (30 dias)</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
+                                <label for="pagosRealizadosManual">Pagos realizados (opcional)</label>
+                                <input type="number" id="pagosRealizadosManual" min="0" step="1" placeholder="Auto">
+                            </div>
+                        </div>
+                    </section>
+
+                    <section id="modo-calendario" hidden>
+                        <div class="info-box primary">
+                            Ingresa una fecha por linea en formato YYYY-MM-DD.
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="primeraFechaPago">Primera fecha de pago</label>
+                                <input type="date" id="primeraFechaPago">
+                            </div>
+                            <div class="input-group">
+                                <label for="numeroTotalPagos">Numero total de pagos</label>
+                                <input type="number" id="numeroTotalPagos" min="1" step="1">
+                            </div>
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group">
+                                <label for="montoUltimoPago">Monto del ultimo pago (opcional)</label>
+                                <input type="number" id="montoUltimoPago" min="0" step="0.01">
+                            </div>
+                            <div class="input-group">
+                                <label for="calendarioPagos">Fechas de pago</label>
+                                <textarea id="calendarioPagos" rows="8" placeholder="2026-01-15&#10;2026-01-29&#10;2026-02-12"></textarea>
+                            </div>
+                        </div>
+                        <div class="btn-row">
+                            <button id="btnGenerarCalendario" class="btn btn-secondary" type="button">Generar calendario automatico</button>
+                            <button id="btnAnalizarCalendario" class="btn btn-secondary" type="button">Analizar calendario</button>
+                        </div>
+                    </section>
+
+                    <div class="input-row" style="margin-top: 10px;">
+                        <div class="input-group">
+                            <label for="taxes">Impuestos o cargos adicionales</label>
+                            <input type="number" id="taxes" step="0.01" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="historialMaximo">Maximo historial visible</label>
+                            <input type="number" id="historialMaximo" min="5" max="20" step="1" value="10">
+                        </div>
                     </div>
 
-                    <div class="result-item" id="resProximoPagoContainer">
-                        <div class="result-label">Próximo Pago</div>
-                        <div class="result-value small" id="resProximoPago">-</div>
+                    <div class="btn-row">
+                        <button id="btnCalcular" class="btn btn-primary" type="button">Calcular balance</button>
+                        <button id="btnLimpiar" class="btn btn-danger" type="button">Limpiar formulario</button>
                     </div>
+                </form>
 
-                    <div class="result-item" id="resPagoVencidoContainer" style="display: none; background: rgba(255,0,0,0.2);">
-                        <div class="result-label">⚠️ Pago Vencido</div>
-                        <div class="result-value small" id="resPagoVencido">-</div>
+                <p class="hint">Atajo: <strong>Ctrl + Enter</strong> para calcular.</p>
+            </section>
+
+            <aside class="panel-right">
+                <section id="results" class="card results hidden" aria-live="polite">
+                    <h2>Resumen del prestamo</h2>
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <div class="result-label">Acreedor</div>
+                            <div class="result-value small" id="resNombre">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Contrato</div>
+                            <div class="result-value small" id="resId">-</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Estado</div>
+                            <div class="result-value small" id="resStatus">-</div>
+                        </div>
+                        <div class="result-item highlight">
+                            <div class="result-label">Balance actual</div>
+                            <div class="result-value" id="resBalance">$0.00</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="progressBar"></div>
+                            </div>
+                            <div class="result-label" style="margin-top: 6px;">
+                                <span id="porcentajePagado">0%</span> pagado
+                            </div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Pagos realizados</div>
+                            <div class="result-value small" id="resPagosRealizados">0 pagos</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Total pagado</div>
+                            <div class="result-value small" id="resTotalPagado">$0.00</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Pagos restantes</div>
+                            <div class="result-value small" id="resPagosRestantes">0 pagos</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-label">Proximo pago</div>
+                            <div class="result-value small" id="resProximoPago">-</div>
+                        </div>
                     </div>
-                </div>
+                </section>
 
-                <!-- Tabla de Calendario (solo visible en modo calendario) -->
-                <div id="calendarioResults" class="card hidden" style="margin-top: 25px;">
-                    <h2>📅 Calendario de Pagos</h2>
-                    <div style="overflow-x: auto;">
-                        <table class="schedule-table" id="tablaCalendario">
+                <section id="calendarioResults" class="card hidden" aria-live="polite">
+                    <h2>Calendario de pagos</h2>
+                    <div class="table-wrap">
+                        <table class="schedule-table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -642,419 +685,769 @@
                                     <th>Estado</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaCalendarioBody">
-                            </tbody>
+                            <tbody id="tablaCalendarioBody"></tbody>
                         </table>
                     </div>
-                </div>
+                </section>
 
-                <!-- Historial -->
-                <div class="card history">
-                    <h2>🕐 Historial de Cálculos</h2>
-                    <div id="historialLista">
-                        <p style="color: #999; text-align: center; padding: 20px;">No hay cálculos recientes</p>
+                <section class="card history" aria-labelledby="historyHeading">
+                    <h2 id="historyHeading">Historial</h2>
+                    <div id="historialLista" class="history-list"></div>
+                    <div class="history-tools">
+                        <button id="btnLimpiarHistorial" class="btn btn-secondary" type="button">Limpiar historial</button>
                     </div>
-                </div>
-            </div>
-        </div>
+                </section>
+            </aside>
+        </main>
     </div>
 
     <script>
-        let historial = JSON.parse(localStorage.getItem('prestamoHistorial')) || [];
-        let tipoActual = 'frecuencia';
+        const STORAGE_KEYS = {
+            history: "prestamoHistorial",
+            lastData: "prestamoLastData"
+        };
 
-        // Inicializar
-        document.addEventListener('DOMContentLoaded', () => {
-            actualizarFechaActual();
-            cargarHistorial();
-            
-            // Cargar últimos datos
-            const savedData = localStorage.getItem('prestamoLastData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                Object.keys(data).forEach(key => {
-                    const el = document.getElementById(key);
-                    if (el) el.value = data[key];
-                });
-                
-                if (data.tipo === 'calendario') {
-                    selectTipo('calendario');
+        const FIELD_IDS = [
+            "nombreAcreedor",
+            "idContrato",
+            "fechaAcuerdo",
+            "fechaActual",
+            "totalPagos",
+            "montoPago",
+            "frecuencia",
+            "pagosRealizadosManual",
+            "primeraFechaPago",
+            "numeroTotalPagos",
+            "montoUltimoPago",
+            "calendarioPagos",
+            "taxes",
+            "historialMaximo"
+        ];
+
+        const currency = new Intl.NumberFormat("es-ES", {
+            style: "currency",
+            currency: "USD",
+            minimumFractionDigits: 2
+        });
+
+        let tipoActual = "frecuencia";
+        let historial = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            bindEvents();
+            applyDefaultValues();
+            loadLastData();
+            historial = normalizeHistory(safeReadJSON(STORAGE_KEYS.history, []));
+            renderHistory();
+            setTipo(tipoActual, false);
+        });
+
+        function bindEvents() {
+            document.querySelectorAll("[data-tipo]").forEach((button) => {
+                button.addEventListener("click", () => setTipo(button.dataset.tipo));
+            });
+
+            document.getElementById("btnCalcular").addEventListener("click", calcular);
+            document.getElementById("btnLimpiar").addEventListener("click", limpiarFormulario);
+            document.getElementById("btnGenerarCalendario").addEventListener("click", generarCalendarioAutomatico);
+            document.getElementById("btnAnalizarCalendario").addEventListener("click", analizarCalendario);
+            document.getElementById("btnLimpiarHistorial").addEventListener("click", limpiarHistorial);
+
+            document.getElementById("historialLista").addEventListener("click", (event) => {
+                const loadBtn = event.target.closest("[data-history-load]");
+                if (loadBtn) {
+                    cargarDesdeHistorial(Number(loadBtn.dataset.historyLoad));
+                    return;
+                }
+
+                const deleteBtn = event.target.closest("[data-history-delete]");
+                if (deleteBtn) {
+                    eliminarItemHistorial(Number(deleteBtn.dataset.historyDelete));
+                }
+            });
+
+            document.addEventListener("keydown", (event) => {
+                if (event.ctrlKey && event.key === "Enter") {
+                    calcular();
+                }
+            });
+        }
+
+        function applyDefaultValues() {
+            const today = parseISODate(getTodayISO());
+            const fechaAcuerdo = addDays(today, -135);
+            const primeraFecha = addDays(today, -120);
+
+            setValue("nombreAcreedor", "CreditNinja");
+            setValue("idContrato", "8814712");
+            setValue("fechaActual", formatISODate(today));
+            setValue("fechaAcuerdo", formatISODate(fechaAcuerdo));
+            setValue("totalPagos", "2554.14");
+            setValue("montoPago", "134.44");
+            setValue("frecuencia", "14");
+            setValue("pagosRealizadosManual", "");
+            setValue("primeraFechaPago", formatISODate(primeraFecha));
+            setValue("numeroTotalPagos", "19");
+            setValue("montoUltimoPago", "134.22");
+            setValue("taxes", "0");
+            setValue("historialMaximo", "10");
+
+            generarCalendarioEjemplo();
+            hideResults();
+        }
+
+        function setTipo(tipo, save = true) {
+            tipoActual = tipo === "calendario" ? "calendario" : "frecuencia";
+
+            document.querySelectorAll("[data-tipo]").forEach((button) => {
+                const active = button.dataset.tipo === tipoActual;
+                button.classList.toggle("active", active);
+                button.setAttribute("aria-pressed", String(active));
+            });
+
+            const modoFrecuencia = document.getElementById("modo-frecuencia");
+            const modoCalendario = document.getElementById("modo-calendario");
+
+            if (tipoActual === "frecuencia") {
+                modoFrecuencia.hidden = false;
+                modoCalendario.hidden = true;
+                document.getElementById("calendarioResults").classList.add("hidden");
+            } else {
+                modoFrecuencia.hidden = true;
+                modoCalendario.hidden = false;
+            }
+
+            if (save) {
+                saveLastData();
+            }
+        }
+
+        function calcular() {
+            clearFeedback();
+
+            const data = collectFormData();
+            if (!data) {
+                return;
+            }
+
+            const resultado = tipoActual === "frecuencia"
+                ? calcularPorFrecuencia(data)
+                : calcularPorCalendario(data);
+
+            if (!resultado) {
+                return;
+            }
+
+            renderResults(data, resultado);
+            saveLastData();
+            guardarEnHistorial(data, resultado);
+        }
+
+        function collectFormData() {
+            const nombre = document.getElementById("nombreAcreedor").value.trim() || "No especificado";
+            const idContrato = document.getElementById("idContrato").value.trim() || "No especificado";
+            const fechaAcuerdo = parseISODate(document.getElementById("fechaAcuerdo").value);
+            const fechaActual = parseISODate(document.getElementById("fechaActual").value);
+            const totalPagos = parseInputNumber("totalPagos");
+            const montoPago = parseInputNumber("montoPago");
+            const taxesRaw = document.getElementById("taxes").value.trim();
+            const taxes = taxesRaw === "" ? 0 : parseInputNumber("taxes");
+            const pagosManualRaw = document.getElementById("pagosRealizadosManual").value.trim();
+            const pagosManual = pagosManualRaw === "" ? null : Number(pagosManualRaw);
+            const frecuencia = Number(document.getElementById("frecuencia").value);
+            const montoUltimoRaw = document.getElementById("montoUltimoPago").value.trim();
+            const montoUltimo = montoUltimoRaw === "" ? null : Number(montoUltimoRaw);
+            const historialMaximo = Number(document.getElementById("historialMaximo").value || "10");
+
+            if (!fechaAcuerdo || !fechaActual) {
+                showFeedback("Ingresa fechas validas para acuerdo y fecha actual.");
+                return null;
+            }
+
+            if (!Number.isFinite(totalPagos) || totalPagos <= 0) {
+                showFeedback("El monto total del contrato debe ser mayor que cero.");
+                return null;
+            }
+
+            if (!Number.isFinite(montoPago) || montoPago <= 0) {
+                showFeedback("El monto por cuota debe ser mayor que cero.");
+                return null;
+            }
+
+            if (!Number.isFinite(taxes)) {
+                showFeedback("Impuestos/cargos contiene un valor invalido.");
+                return null;
+            }
+
+            if (totalPagos + taxes <= 0) {
+                showFeedback("La suma de total + impuestos/cargos debe ser mayor que cero.");
+                return null;
+            }
+
+            if (pagosManual !== null && (!Number.isFinite(pagosManual) || pagosManual < 0 || !Number.isInteger(pagosManual))) {
+                showFeedback("Pagos realizados manuales debe ser un entero mayor o igual a cero.");
+                return null;
+            }
+
+            if (!Number.isFinite(frecuencia) || frecuencia <= 0) {
+                showFeedback("Selecciona una frecuencia de pago valida.");
+                return null;
+            }
+
+            if (montoUltimo !== null && (!Number.isFinite(montoUltimo) || montoUltimo < 0)) {
+                showFeedback("Monto del ultimo pago invalido.");
+                return null;
+            }
+
+            return {
+                nombre,
+                idContrato,
+                fechaAcuerdo,
+                fechaActual,
+                totalPagos,
+                montoPago,
+                taxes,
+                pagosManual,
+                frecuencia,
+                montoUltimo,
+                historialMaximo: clamp(historialMaximo, 5, 20)
+            };
+        }
+
+        function calcularPorFrecuencia(data) {
+            const diasTranscurridos = diffInDays(data.fechaAcuerdo, data.fechaActual);
+            let pagosRealizados = data.pagosManual;
+            if (pagosRealizados === null) {
+                pagosRealizados = diasTranscurridos < data.frecuencia ? 0 : Math.floor(diasTranscurridos / data.frecuencia);
+            }
+
+            pagosRealizados = Math.max(0, pagosRealizados);
+            const totalConCargos = data.totalPagos + data.taxes;
+            const totalPagado = pagosRealizados * data.montoPago;
+            const balance = Math.max(0, totalConCargos - totalPagado);
+            const pagosRestantes = balance === 0 ? 0 : Math.ceil(balance / data.montoPago);
+            const porcentajePagado = totalConCargos > 0 ? Math.min((totalPagado / totalConCargos) * 100, 100) : 0;
+            const proximoPagoDate = balance === 0
+                ? null
+                : addDays(data.fechaAcuerdo, (pagosRealizados + 1) * data.frecuencia);
+
+            return {
+                tipo: "frecuencia",
+                totalConCargos,
+                totalPagado,
+                balance,
+                pagosRealizados,
+                pagosRestantes,
+                porcentajePagado,
+                proximoPagoDate,
+                vencido: false,
+                calendario: []
+            };
+        }
+
+        function calcularPorCalendario(data) {
+            const fechas = parseCalendarLines(document.getElementById("calendarioPagos").value);
+            if (!fechas.length) {
+                showFeedback("Debes ingresar al menos una fecha de pago en el calendario.");
+                return null;
+            }
+
+            let pagosEsperadosHastaHoy = 0;
+            fechas.forEach((fecha) => {
+                if (fecha.getTime() <= data.fechaActual.getTime()) {
+                    pagosEsperadosHastaHoy += 1;
+                }
+            });
+
+            let pagosRealizados = data.pagosManual === null ? pagosEsperadosHastaHoy : data.pagosManual;
+            pagosRealizados = clamp(pagosRealizados, 0, fechas.length);
+
+            const montoUltimo = data.montoUltimo === null ? data.montoPago : data.montoUltimo;
+            const regularPaid = Math.min(pagosRealizados, Math.max(fechas.length - 1, 0));
+            const ultimoPagoPagado = pagosRealizados >= fechas.length ? 1 : 0;
+            const totalPagado = (regularPaid * data.montoPago) + (ultimoPagoPagado * montoUltimo);
+            const totalConCargos = data.totalPagos + data.taxes;
+            const balance = Math.max(0, totalConCargos - totalPagado);
+            const pagosRestantes = balance === 0 ? 0 : Math.ceil(balance / data.montoPago);
+            const porcentajePagado = totalConCargos > 0 ? Math.min((totalPagado / totalConCargos) * 100, 100) : 0;
+            const proximoPagoDate = pagosRealizados < fechas.length ? fechas[pagosRealizados] : null;
+            const vencido = data.pagosManual !== null && data.pagosManual < pagosEsperadosHastaHoy;
+
+            const calendario = fechas.map((fecha, index) => {
+                const esUltimo = index === fechas.length - 1;
+                const monto = esUltimo ? montoUltimo : data.montoPago;
+                const isPaid = index < pagosRealizados;
+                const isPast = fecha.getTime() < data.fechaActual.getTime();
+                const isToday = fecha.getTime() === data.fechaActual.getTime();
+
+                let estado = "Pendiente";
+                let clase = "row-future";
+
+                if (isPaid) {
+                    estado = "Pagado";
+                    clase = "row-paid";
+                } else if (isPast) {
+                    estado = "Vencido";
+                    clase = "row-overdue";
+                } else if (isToday) {
+                    estado = "Pago hoy";
+                    clase = "row-due";
+                }
+
+                return {
+                    index: index + 1,
+                    fecha,
+                    monto,
+                    estado,
+                    clase
+                };
+            });
+
+            return {
+                tipo: "calendario",
+                totalConCargos,
+                totalPagado,
+                balance,
+                pagosRealizados,
+                pagosRestantes,
+                porcentajePagado,
+                proximoPagoDate,
+                vencido,
+                calendario
+            };
+        }
+
+        function renderResults(data, result) {
+            document.getElementById("resNombre").textContent = data.nombre;
+            document.getElementById("resId").textContent = data.idContrato;
+            document.getElementById("resBalance").textContent = currency.format(result.balance);
+            document.getElementById("resPagosRealizados").textContent = result.pagosRealizados + " pagos";
+            document.getElementById("resTotalPagado").textContent = currency.format(result.totalPagado);
+            document.getElementById("resPagosRestantes").textContent = result.pagosRestantes + " pagos";
+            document.getElementById("porcentajePagado").textContent = result.porcentajePagado.toFixed(1) + "%";
+            document.getElementById("progressBar").style.width = result.porcentajePagado.toFixed(1) + "%";
+
+            const proximoPagoText = result.proximoPagoDate
+                ? formatDisplayDate(result.proximoPagoDate)
+                : "Prestamo completado";
+            document.getElementById("resProximoPago").textContent = proximoPagoText;
+
+            const statusElement = document.getElementById("resStatus");
+            if (result.balance === 0) {
+                statusElement.innerHTML = '<span class="status-pill status-done">Completado</span>';
+            } else if (result.tipo === "calendario" && result.vencido) {
+                statusElement.innerHTML = '<span class="status-pill status-late">Pago vencido</span>';
+            } else {
+                statusElement.innerHTML = '<span class="status-pill status-ok">Al dia</span>';
+            }
+
+            document.getElementById("results").classList.remove("hidden");
+
+            if (result.tipo === "calendario") {
+                renderCalendarTable(result.calendario);
+            } else {
+                document.getElementById("calendarioResults").classList.add("hidden");
+            }
+        }
+
+        function renderCalendarTable(rows) {
+            const body = document.getElementById("tablaCalendarioBody");
+            body.innerHTML = "";
+
+            rows.forEach((row) => {
+                const tr = document.createElement("tr");
+                tr.className = row.clase;
+                tr.innerHTML = [
+                    "<td>" + row.index + "</td>",
+                    "<td>" + formatDisplayDate(row.fecha) + "</td>",
+                    "<td>" + currency.format(row.monto) + "</td>",
+                    "<td>" + row.estado + "</td>"
+                ].join("");
+                body.appendChild(tr);
+            });
+
+            document.getElementById("calendarioResults").classList.remove("hidden");
+        }
+
+        function analizarCalendario() {
+            clearFeedback();
+
+            const fechaActual = parseISODate(document.getElementById("fechaActual").value);
+            if (!fechaActual) {
+                showFeedback("Ingresa una fecha actual valida para analizar el calendario.");
+                return;
+            }
+
+            const fechas = parseCalendarLines(document.getElementById("calendarioPagos").value);
+            if (!fechas.length) {
+                showFeedback("No hay fechas validas para analizar.");
+                return;
+            }
+
+            let pagosEsperados = 0;
+            let proximoPago = null;
+
+            for (let i = 0; i < fechas.length; i += 1) {
+                if (fechas[i].getTime() <= fechaActual.getTime()) {
+                    pagosEsperados += 1;
+                } else if (!proximoPago) {
+                    proximoPago = fechas[i];
                 }
             }
 
-            // Generar calendario ejemplo para CreditNinja
-            generarCalendarioEjemplo();
-        });
-
-        function actualizarFechaActual() {
-            const hoy = new Date().toISOString().split('T')[0];
-            document.getElementById('fechaActual').value = hoy;
-        }
-
-        function selectTipo(tipo) {
-            tipoActual = tipo;
-            
-            // Actualizar UI
-            document.querySelectorAll('.tipo-option').forEach(el => el.classList.remove('selected'));
-            document.getElementById('tipo-' + tipo).classList.add('selected');
-            
-            // Mostrar/ocultar secciones
-            if (tipo === 'frecuencia') {
-                document.getElementById('modo-frecuencia').classList.remove('hidden');
-                document.getElementById('modo-calendario').classList.add('hidden');
-                document.getElementById('calendarioResults').classList.add('hidden');
-            } else {
-                document.getElementById('modo-frecuencia').classList.add('hidden');
-                document.getElementById('modo-calendario').classList.remove('hidden');
-            }
-        }
-
-        function generarCalendarioEjemplo() {
-            // Generar el calendario de ejemplo para CreditNinja
-            const fechas = [
-                '2025-10-22', '2025-11-05', '2025-11-19', '2025-12-03',
-                '2025-12-17', '2025-12-31', '2026-01-14', '2026-01-28',
-                '2026-02-11', '2026-02-25', '2026-03-11', '2026-03-25',
-                '2026-04-08', '2026-04-22', '2026-05-06', '2026-05-20',
-                '2026-06-03', '2026-06-17', '2026-07-01'
-            ];
-            document.getElementById('calendarioPagos').value = fechas.join('\n');
+            document.getElementById("pagosRealizadosManual").value = String(pagosEsperados);
+            showFeedback(
+                "Analisis completado: " +
+                pagosEsperados + " pagos esperados hasta " + formatDisplayDate(fechaActual) +
+                ". Proximo pago: " + (proximoPago ? formatDisplayDate(proximoPago) : "no hay"),
+                "success"
+            );
         }
 
         function generarCalendarioAutomatico() {
-            const primeraFecha = document.getElementById('primeraFechaPago').value;
-            const numPagos = parseInt(document.getElementById('numeroTotalPagos').value) || 19;
-            
+            clearFeedback();
+
+            const primeraFecha = parseISODate(document.getElementById("primeraFechaPago").value);
+            const numeroPagos = Number(document.getElementById("numeroTotalPagos").value);
+
             if (!primeraFecha) {
-                alert('Por favor ingresa la primera fecha de pago');
+                showFeedback("Ingresa una primera fecha valida para generar el calendario.");
+                return;
+            }
+
+            if (!Number.isFinite(numeroPagos) || numeroPagos <= 0 || !Number.isInteger(numeroPagos)) {
+                showFeedback("Numero total de pagos invalido.");
                 return;
             }
 
             const fechas = [];
-            let fechaActual = new Date(primeraFecha);
-            
-            for (let i = 0; i < numPagos; i++) {
-                fechas.push(fechaActual.toISOString().split('T')[0]);
-                fechaActual.setDate(fechaActual.getDate() + 14); // Quincenal
+            for (let i = 0; i < numeroPagos; i += 1) {
+                fechas.push(formatISODate(addDays(primeraFecha, i * 14)));
             }
 
-            document.getElementById('calendarioPagos').value = fechas.join('\n');
-            
-            // Actualizar fecha de acuerdo si está vacía
-            if (!document.getElementById('fechaAcuerdo').value) {
-                const fechaPrestamo = new Date(primeraFecha);
-                fechaPrestamo.setDate(fechaPrestamo.getDate() - 16); // Aproximadamente 16 días antes
-                document.getElementById('fechaAcuerdo').value = fechaPrestamo.toISOString().split('T')[0];
+            document.getElementById("calendarioPagos").value = fechas.join("\n");
+
+            if (!document.getElementById("fechaAcuerdo").value) {
+                document.getElementById("fechaAcuerdo").value = formatISODate(addDays(primeraFecha, -16));
             }
 
-            alert('Calendario generado con ' + numPagos + ' pagos quincenales');
+            showFeedback("Calendario generado con " + numeroPagos + " pagos quincenales.", "success");
         }
 
-        function analizarCalendario() {
-            const fechasTexto = document.getElementById('calendarioPagos').value.trim();
-            const fechaActual = new Date(document.getElementById('fechaActual').value);
-            
-            if (!fechasTexto) {
-                alert('Por favor ingresa las fechas de pago');
+        function limpiarFormulario() {
+            const ok = window.confirm("Se limpiara el formulario y los resultados. Deseas continuar?");
+            if (!ok) {
                 return;
             }
 
-            const fechas = fechasTexto.split('\n').filter(f => f.trim());
-            let pagosRealizados = 0;
-            let proximoPagoIndex = -1;
-            let hayVencido = false;
-
-            fechas.forEach((fechaStr, index) => {
-                const fechaPago = new Date(fechaStr.trim());
-                if (fechaPago <= fechaActual) {
-                    pagosRealizados++;
-                } else if (proximoPagoIndex === -1) {
-                    proximoPagoIndex = index;
-                }
-            });
-
-            // Verificar si hay pago vencido (el último pagado está vencido si pasó más de 14 días)
-            if (proximoPagoIndex > 0) {
-                const ultimaFechaPagada = new Date(fechas[proximoPagoIndex - 1]);
-                const diasDesdeUltimoPago = Math.floor((fechaActual - ultimaFechaPagada) / (1000 * 60 * 60 * 24));
-                if (diasDesdeUltimoPago > 14) {
-                    hayVencido = true;
-                }
-            }
-
-            const mensaje = `📊 Análisis del Calendario:
-• Total de pagos en calendario: ${fechas.length}
-• Pagos realizados hasta hoy: ${pagosRealizados}
-• Próximo pago: ${proximoPagoIndex > -1 ? fechas[proximoPagoIndex] : 'Ninguno (finalizado)'}
-${hayVencido ? '⚠️ Hay pagos vencidos' : '✅ Al día con los pagos'}`;
-
-            alert(mensaje);
-            
-            // Auto-llenar el campo de pagos realizados
-            document.getElementById('pagosRealizadosManual').value = pagosRealizados;
+            applyDefaultValues();
+            setTipo("frecuencia", false);
+            safeRemove(STORAGE_KEYS.lastData);
+            showFeedback("Formulario restablecido.", "success");
         }
 
-        function calcular() {
-            const nombre = document.getElementById('nombreAcreedor').value || 'No especificado';
-            const id = document.getElementById('idContrato').value || 'No especificado';
-            const fechaAcuerdo = new Date(document.getElementById('fechaAcuerdo').value);
-            const fechaActual = new Date(document.getElementById('fechaActual').value);
-            const totalPagos = parseFloat(document.getElementById('totalPagos').value) || 0;
-            const montoPago = parseFloat(document.getElementById('montoPago').value) || 0;
-            const taxes = parseFloat(document.getElementById('taxes').value) || 0;
+        function guardarEnHistorial(data, result) {
+            const maximo = data.historialMaximo;
+            const snapshot = collectSnapshot();
 
-            if (!fechaAcuerdo.getTime() || !fechaActual.getTime()) {
-                alert('Por favor ingresa fechas válidas');
-                return;
-            }
-
-            if (totalPagos <= 0 || montoPago <= 0) {
-                alert('Por favor ingresa montos válidos');
-                return;
-            }
-
-            let pagosRealizados, totalPagado, proximoPago, hayVencido = false;
-
-            if (tipoActual === 'frecuencia') {
-                // Modo frecuencia (Snap Finance)
-                const frecuencia = parseInt(document.getElementById('frecuencia').value) || 7;
-                const pagosManual = document.getElementById('pagosRealizadosManual').value;
-
-                if (pagosManual) {
-                    pagosRealizados = parseInt(pagosManual);
-                } else {
-                    const diffTime = Math.abs(fechaActual - fechaAcuerdo);
-                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                    pagosRealizados = Math.floor(diffDays / frecuencia);
-                    if (diffDays % frecuencia === 0 && diffDays > 0) pagosRealizados++;
-                }
-
-                const diasDesdeAcuerdo = pagosRealizados * frecuencia;
-                const proximaFecha = new Date(fechaAcuerdo);
-                proximaFecha.setDate(proximaFecha.getDate() + diasDesdeAcuerdo + frecuencia);
-                proximoPago = proximaFecha.toLocaleDateString('es-ES');
-
-                totalPagado = pagosRealizados * montoPago;
-
-            } else {
-                // Modo calendario (CreditNinja)
-                const fechasTexto = document.getElementById('calendarioPagos').value.trim();
-                const montoUltimo = parseFloat(document.getElementById('montoUltimoPago').value) || montoPago;
-                
-                if (!fechasTexto) {
-                    alert('Por favor ingresa el calendario de pagos o usa el modo por frecuencia');
-                    return;
-                }
-
-                const fechas = fechasTexto.split('\n').filter(f => f.trim());
-                const pagosManual = document.getElementById('pagosRealizadosManual').value;
-
-                if (pagosManual) {
-                    pagosRealizados = parseInt(pagosManual);
-                } else {
-                    pagosRealizados = 0;
-                    fechas.forEach(fechaStr => {
-                        const fechaPago = new Date(fechaStr.trim());
-                        if (fechaPago <= fechaActual) {
-                            pagosRealizados++;
-                        }
-                    });
-                }
-
-                // Calcular total pagado considerando el último pago diferente
-                const numPagos = fechas.length;
-                if (pagosRealizados >= numPagos) {
-                    totalPagado = ((numPagos - 1) * montoPago) + montoUltimo;
-                } else {
-                    const pagosCompletos = Math.min(pagosRealizados, numPagos - 1);
-                    const incluyeUltimo = pagosRealizados >= numPagos;
-                    totalPagado = (pagosCompletos * montoPago) + (incluyeUltimo ? montoUltimo : 0);
-                }
-
-                // Determinar próximo pago y si está vencido
-                const proximoIndex = pagosRealizados;
-                if (proximoIndex < fechas.length) {
-                    const fechaProximo = new Date(fechas[proximoIndex]);
-                    proximoPago = fechaProximo.toLocaleDateString('es-ES');
-                    
-                    // Verificar si está vencido
-                    if (fechaProximo < fechaActual) {
-                        hayVencido = true;
-                    }
-                } else {
-                    proximoPago = 'Préstamo completado';
-                }
-
-                // Mostrar tabla de calendario
-                mostrarTablaCalendario(fechas, montoPago, montoUltimo, fechaActual);
-            }
-
-            // Cálculos comunes
-            const totalConTaxes = totalPagos + taxes;
-            const balance = Math.max(0, totalConTaxes - totalPagado);
-            const pagosRestantes = Math.ceil(balance / montoPago);
-            const porcentajePagado = Math.min((totalPagado / totalConTaxes) * 100, 100);
-
-            // Mostrar resultados
-            document.getElementById('resNombre').textContent = nombre;
-            document.getElementById('resId').textContent = id;
-            document.getElementById('resBalance').textContent = '$' + balance.toFixed(2);
-            document.getElementById('resPagosRealizados').textContent = pagosRealizados + ' pagos';
-            document.getElementById('resTotalPagado').textContent = '$' + totalPagado.toFixed(2);
-            document.getElementById('resPagosRestantes').textContent = pagosRestantes + ' pagos';
-            document.getElementById('resProximoPago').textContent = proximoPago;
-            document.getElementById('porcentajePagado').textContent = porcentajePagado.toFixed(1) + '%';
-            document.getElementById('progressBar').style.width = porcentajePagado + '%';
-
-            // Mostrar estado
-            const statusContainer = document.getElementById('resStatusContainer');
-            const statusEl = document.getElementById('resStatus');
-            const vencidoContainer = document.getElementById('resPagoVencidoContainer');
-            const vencidoEl = document.getElementById('resPagoVencido');
-
-            if (tipoActual === 'calendario') {
-                statusContainer.style.display = 'block';
-                if (hayVencido) {
-                    statusEl.innerHTML = '<span class="status-indicator status-late">🔴 VENCIDO</span>';
-                    vencidoContainer.style.display = 'block';
-                    vencidoEl.textContent = 'El pago del ' + proximoPago + ' está vencido';
-                } else if (proximoPago === 'Préstamo completado') {
-                    statusEl.innerHTML = '<span class="status-indicator status-paid">✅ COMPLETADO</span>';
-                    vencidoContainer.style.display = 'none';
-                } else {
-                    statusEl.innerHTML = '<span class="status-indicator status-current">🟢 AL DÍA</span>';
-                    vencidoContainer.style.display = 'none';
-                }
-            } else {
-                statusContainer.style.display = 'none';
-                vencidoContainer.style.display = 'none';
-            }
-
-            document.getElementById('results').classList.add('active');
-
-            // Guardar en historial
-            guardarEnHistorial({
-                fecha: new Date().toLocaleString('es-ES'),
-                nombre,
-                id,
+            historial.unshift({
+                fecha: new Date().toLocaleString("es-ES"),
                 tipo: tipoActual,
-                balance: balance.toFixed(2),
-                pagosRealizados,
-                totalPagado: totalPagado.toFixed(2)
+                nombre: data.nombre,
+                id: data.idContrato,
+                balance: result.balance,
+                pagosRealizados: result.pagosRealizados,
+                formData: snapshot
             });
 
-            // Guardar datos
-            localStorage.setItem('prestamoLastData', JSON.stringify({
-                tipo: tipoActual,
-                nombreAcreedor: nombre,
-                idContrato: id,
-                fechaAcuerdo: document.getElementById('fechaAcuerdo').value,
-                fechaActual: document.getElementById('fechaActual').value,
-                totalPagos: totalPagos,
-                montoPago: montoPago,
-                taxes: taxes,
-                frecuencia: document.getElementById('frecuencia').value,
-                pagosRealizadosManual: document.getElementById('pagosRealizadosManual').value,
-                primeraFechaPago: document.getElementById('primeraFechaPago').value,
-                numeroTotalPagos: document.getElementById('numeroTotalPagos').value,
-                montoUltimoPago: document.getElementById('montoUltimoPago').value,
-                calendarioPagos: document.getElementById('calendarioPagos').value
-            }));
+            if (historial.length > maximo) {
+                historial = historial.slice(0, maximo);
+            }
+
+            safeWriteJSON(STORAGE_KEYS.history, historial);
+            renderHistory();
         }
 
-        function mostrarTablaCalendario(fechas, montoRegular, montoUltimo, fechaActual) {
-            const tbody = document.getElementById('tablaCalendarioBody');
-            tbody.innerHTML = '';
-
-            fechas.forEach((fechaStr, index) => {
-                const fechaPago = new Date(fechaStr.trim());
-                const esUltimo = index === fechas.length - 1;
-                const monto = esUltimo ? montoUltimo : montoRegular;
-                
-                let estado, clase, badge;
-                if (fechaPago < fechaActual) {
-                    estado = 'Pagado';
-                    clase = 'paid';
-                    badge = '<span class="badge badge-paid">✓ Pagado</span>';
-                } else if (fechaPago.toDateString() === fechaActual.toDateString()) {
-                    estado = 'Hoy';
-                    clase = 'pending';
-                    badge = '<span class="badge badge-pending">📅 Hoy</span>';
-                } else {
-                    estado = 'Pendiente';
-                    clase = 'future';
-                    badge = '<span class="badge badge-future">⏳ Pendiente</span>';
-                }
-
-                const row = document.createElement('tr');
-                row.className = clase;
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${fechaPago.toLocaleDateString('es-ES')}</td>
-                    <td>$${monto.toFixed(2)}</td>
-                    <td>${badge}</td>
-                `;
-                tbody.appendChild(row);
-            });
-
-            document.getElementById('calendarioResults').classList.remove('hidden');
-        }
-
-        function guardarEnHistorial(data) {
-            historial.unshift(data);
-            if (historial.length > 10) historial.pop();
-            localStorage.setItem('prestamoHistorial', JSON.stringify(historial));
-            cargarHistorial();
-        }
-
-        function cargarHistorial() {
-            const container = document.getElementById('historialLista');
-            if (historial.length === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">No hay cálculos recientes</p>';
+        function renderHistory() {
+            const container = document.getElementById("historialLista");
+            if (!historial.length) {
+                container.innerHTML = '<p class="history-empty">No hay calculos recientes.</p>';
                 return;
             }
 
-            container.innerHTML = historial.map((item, index) => `
-                <div class="history-item" onclick="cargarDesdeHistorial(${index})">
-                    <strong>${item.nombre}</strong> - ID: ${item.id}<br>
-                    <small>Balance: $${item.balance} | Pagos: ${item.pagosRealizados} | ${item.tipo === 'calendario' ? '📆' : '📅'} ${item.fecha}</small>
-                </div>
-            `).join('');
+            container.innerHTML = historial.map((item, index) => {
+                return [
+                    '<article class="history-item">',
+                    "<div>",
+                    '<p class="history-title">' + escapeHtml(item.nombre || "Sin nombre") + " - " + escapeHtml(item.id || "Sin ID") + "</p>",
+                    '<p class="history-meta">' +
+                    "Balance: " + currency.format(Number(item.balance || 0)) +
+                    " | Pagos: " + Number(item.pagosRealizados || 0) +
+                    " | Tipo: " + escapeHtml(item.tipo || "-") +
+                    " | " + escapeHtml(item.fecha || "-") +
+                    "</p>",
+                    "</div>",
+                    '<div class="history-actions">',
+                    '<button class="btn btn-secondary" type="button" data-history-load="' + index + '">Cargar</button>',
+                    '<button class="btn btn-danger" type="button" data-history-delete="' + index + '">Borrar</button>',
+                    "</div>",
+                    "</article>"
+                ].join("");
+            }).join("");
         }
 
         function cargarDesdeHistorial(index) {
             const item = historial[index];
-            document.getElementById('nombreAcreedor').value = item.nombre;
-            document.getElementById('idContrato').value = item.id;
-            
-            if (item.tipo === 'calendario') {
-                selectTipo('calendario');
-            } else {
-                selectTipo('frecuencia');
+            if (!item || !item.formData || typeof item.formData !== "object") {
+                showFeedback("No se pudo cargar el item del historial.");
+                return;
             }
-            
+
+            restoreSnapshot(item.formData);
+            setTipo(item.formData.tipo || item.tipo || "frecuencia", false);
             calcular();
         }
 
-        function limpiar() {
-            if (confirm('¿Estás seguro de que deseas limpiar todos los datos?')) {
-                document.querySelectorAll('input, textarea').forEach(input => {
-                    if (input.type !== 'button') input.value = '';
-                });
-                document.getElementById('results').classList.remove('active');
-                document.getElementById('calendarioResults').classList.add('hidden');
-                localStorage.removeItem('prestamoLastData');
-                actualizarFechaActual();
-                generarCalendarioEjemplo();
+        function eliminarItemHistorial(index) {
+            if (!Number.isInteger(index) || index < 0 || index >= historial.length) {
+                return;
+            }
+
+            historial.splice(index, 1);
+            safeWriteJSON(STORAGE_KEYS.history, historial);
+            renderHistory();
+        }
+
+        function limpiarHistorial() {
+            if (!historial.length) {
+                return;
+            }
+
+            const ok = window.confirm("Se eliminara el historial completo. Deseas continuar?");
+            if (!ok) {
+                return;
+            }
+
+            historial = [];
+            safeWriteJSON(STORAGE_KEYS.history, historial);
+            renderHistory();
+        }
+
+        function saveLastData() {
+            safeWriteJSON(STORAGE_KEYS.lastData, collectSnapshot());
+        }
+
+        function loadLastData() {
+            const saved = safeReadJSON(STORAGE_KEYS.lastData, null);
+            if (!saved || typeof saved !== "object") {
+                return;
+            }
+
+            restoreSnapshot(saved);
+            setTipo(saved.tipo || "frecuencia", false);
+        }
+
+        function collectSnapshot() {
+            const snapshot = { tipo: tipoActual };
+            FIELD_IDS.forEach((id) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    snapshot[id] = element.value;
+                }
+            });
+            return snapshot;
+        }
+
+        function restoreSnapshot(snapshot) {
+            FIELD_IDS.forEach((id) => {
+                if (Object.prototype.hasOwnProperty.call(snapshot, id)) {
+                    setValue(id, String(snapshot[id] ?? ""));
+                }
+            });
+        }
+
+        function parseCalendarLines(text) {
+            const rawLines = String(text || "")
+                .split(/\r?\n/)
+                .map((line) => line.trim())
+                .filter(Boolean);
+
+            const set = new Set();
+            const dates = [];
+            const invalid = [];
+
+            rawLines.forEach((line) => {
+                const date = parseISODate(line);
+                if (!date) {
+                    invalid.push(line);
+                    return;
+                }
+
+                const key = formatISODate(date);
+                if (!set.has(key)) {
+                    set.add(key);
+                    dates.push(date);
+                }
+            });
+
+            dates.sort((a, b) => a.getTime() - b.getTime());
+
+            if (invalid.length) {
+                showFeedback("Hay fechas invalidas en calendario: " + invalid.slice(0, 3).join(", ") + (invalid.length > 3 ? "..." : ""));
+            }
+
+            return dates;
+        }
+
+        function normalizeHistory(value) {
+            if (!Array.isArray(value)) {
+                return [];
+            }
+            return value.filter((item) => item && typeof item === "object");
+        }
+
+        function hideResults() {
+            document.getElementById("results").classList.add("hidden");
+            document.getElementById("calendarioResults").classList.add("hidden");
+        }
+
+        function parseInputNumber(id) {
+            const raw = document.getElementById(id).value.trim().replace(",", ".");
+            return Number(raw);
+        }
+
+        function setValue(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.value = value;
             }
         }
 
-        // Atajo de teclado
-        document.addEventListener('keydown', (e) => {
-            if (e.ctrlKey && e.key === 'Enter') {
-                calcular();
+        function parseISODate(value) {
+            if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
+                return null;
             }
-        });
+
+            const parts = value.split("-").map(Number);
+            const year = parts[0];
+            const month = parts[1];
+            const day = parts[2];
+
+            const date = new Date(year, month - 1, day);
+            date.setHours(0, 0, 0, 0);
+
+            if (
+                date.getFullYear() !== year ||
+                date.getMonth() !== month - 1 ||
+                date.getDate() !== day
+            ) {
+                return null;
+            }
+
+            return date;
+        }
+
+        function formatISODate(date) {
+            return [
+                date.getFullYear(),
+                String(date.getMonth() + 1).padStart(2, "0"),
+                String(date.getDate()).padStart(2, "0")
+            ].join("-");
+        }
+
+        function getTodayISO() {
+            return formatISODate(new Date());
+        }
+
+        function addDays(date, days) {
+            const next = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            next.setDate(next.getDate() + Number(days || 0));
+            next.setHours(0, 0, 0, 0);
+            return next;
+        }
+
+        function diffInDays(start, end) {
+            const msPerDay = 86400000;
+            const startTime = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+            const endTime = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+            return Math.floor((endTime - startTime) / msPerDay);
+        }
+
+        function formatDisplayDate(date) {
+            return date.toLocaleDateString("es-ES");
+        }
+
+        function clamp(value, min, max) {
+            if (!Number.isFinite(value)) {
+                return min;
+            }
+            return Math.min(max, Math.max(min, value));
+        }
+
+        function safeReadJSON(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) {
+                    return fallback;
+                }
+                return JSON.parse(raw);
+            } catch (error) {
+                return fallback;
+            }
+        }
+
+        function safeWriteJSON(key, data) {
+            try {
+                localStorage.setItem(key, JSON.stringify(data));
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function safeRemove(key) {
+            try {
+                localStorage.removeItem(key);
+                return true;
+            } catch (error) {
+                return false;
+            }
+        }
+
+        function showFeedback(message, type = "error") {
+            const box = document.getElementById("feedback");
+            box.className = "feedback " + (type === "success" ? "success" : "error");
+            box.textContent = message;
+            box.classList.remove("hidden");
+        }
+
+        function clearFeedback() {
+            const box = document.getElementById("feedback");
+            box.textContent = "";
+            box.className = "feedback hidden";
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
+        }
+
+        function generarCalendarioEjemplo() {
+            const inicio = parseISODate(document.getElementById("primeraFechaPago").value) || addDays(parseISODate(getTodayISO()), -120);
+            const total = Number(document.getElementById("numeroTotalPagos").value || "19");
+            const count = Number.isInteger(total) && total > 0 ? total : 19;
+            const fechas = [];
+
+            for (let i = 0; i < count; i += 1) {
+                fechas.push(formatISODate(addDays(inicio, i * 14)));
+            }
+
+            document.getElementById("calendarioPagos").value = fechas.join("\n");
+        }
     </script>
 </body>
 </html>
