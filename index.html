@@ -580,7 +580,7 @@
 
                     <section id="modo-calendario" hidden>
                         <div class="info-box primary">
-                            Ingresa una fecha por linea en formato YYYY-MM-DD.
+                            Ingresa una fecha por linea en formato YYYY-MM-DD. Puedes generarlas por semana, quincena o mensual.
                         </div>
                         <div class="input-row">
                             <div class="input-group">
@@ -594,10 +594,20 @@
                         </div>
                         <div class="input-row">
                             <div class="input-group">
+                                <label for="frecuenciaCalendario">Frecuencia del calendario</label>
+                                <select id="frecuenciaCalendario">
+                                    <option value="semanal">Semanal</option>
+                                    <option value="quincenal" selected>Quincenal</option>
+                                    <option value="mensual">Mensual</option>
+                                </select>
+                            </div>
+                            <div class="input-group">
                                 <label for="montoUltimoPago">Monto del ultimo pago (opcional)</label>
                                 <input type="number" id="montoUltimoPago" min="0" step="0.01">
                             </div>
-                            <div class="input-group">
+                        </div>
+                        <div class="input-row">
+                            <div class="input-group" style="grid-column: 1 / -1;">
                                 <label for="calendarioPagos">Fechas de pago</label>
                                 <textarea id="calendarioPagos" rows="8" placeholder="2026-01-15&#10;2026-01-29&#10;2026-02-12"></textarea>
                             </div>
@@ -718,6 +728,7 @@
             "pagosRealizadosManual",
             "primeraFechaPago",
             "numeroTotalPagos",
+            "frecuenciaCalendario",
             "montoUltimoPago",
             "calendarioPagos",
             "taxes",
@@ -788,6 +799,7 @@
             setValue("pagosRealizadosManual", "");
             setValue("primeraFechaPago", formatISODate(primeraFecha));
             setValue("numeroTotalPagos", "19");
+            setValue("frecuenciaCalendario", "quincenal");
             setValue("montoUltimoPago", "134.22");
             setValue("taxes", "0");
             setValue("historialMaximo", "10");
@@ -1109,6 +1121,7 @@
 
             const primeraFecha = parseISODate(document.getElementById("primeraFechaPago").value);
             const numeroPagos = Number(document.getElementById("numeroTotalPagos").value);
+            const frecuenciaConfig = getCalendarFrequencyConfig();
 
             if (!primeraFecha) {
                 showFeedback("Ingresa una primera fecha valida para generar el calendario.");
@@ -1122,16 +1135,16 @@
 
             const fechas = [];
             for (let i = 0; i < numeroPagos; i += 1) {
-                fechas.push(formatISODate(addDays(primeraFecha, i * 14)));
+                fechas.push(formatISODate(frecuenciaConfig.getDateAt(primeraFecha, i)));
             }
 
             document.getElementById("calendarioPagos").value = fechas.join("\n");
 
             if (!document.getElementById("fechaAcuerdo").value) {
-                document.getElementById("fechaAcuerdo").value = formatISODate(addDays(primeraFecha, -16));
+                document.getElementById("fechaAcuerdo").value = formatISODate(addDays(primeraFecha, -(frecuenciaConfig.days + 2)));
             }
 
-            showFeedback("Calendario generado con " + numeroPagos + " pagos quincenales.", "success");
+            showFeedback("Calendario generado con " + numeroPagos + " pagos " + frecuenciaConfig.label + ".", "success");
         }
 
         function limpiarFormulario() {
@@ -1366,6 +1379,40 @@
             return next;
         }
 
+        function addMonthsSafe(date, monthsToAdd) {
+            const monthDate = new Date(date.getFullYear(), date.getMonth(), 1);
+            monthDate.setMonth(monthDate.getMonth() + Number(monthsToAdd || 0));
+            const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
+            monthDate.setDate(Math.min(date.getDate(), lastDay));
+            monthDate.setHours(0, 0, 0, 0);
+            return monthDate;
+        }
+
+        function getCalendarFrequencyConfig() {
+            const value = document.getElementById("frecuenciaCalendario")?.value || "quincenal";
+            if (value === "semanal") {
+                return {
+                    days: 7,
+                    label: "semanales",
+                    getDateAt: (start, index) => addDays(start, index * 7)
+                };
+            }
+
+            if (value === "mensual") {
+                return {
+                    days: 30,
+                    label: "mensuales",
+                    getDateAt: (start, index) => addMonthsSafe(start, index)
+                };
+            }
+
+            return {
+                days: 14,
+                label: "quincenales",
+                getDateAt: (start, index) => addDays(start, index * 14)
+            };
+        }
+
         function diffInDays(start, end) {
             const msPerDay = 86400000;
             const startTime = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
@@ -1440,10 +1487,11 @@
             const inicio = parseISODate(document.getElementById("primeraFechaPago").value) || addDays(parseISODate(getTodayISO()), -120);
             const total = Number(document.getElementById("numeroTotalPagos").value || "19");
             const count = Number.isInteger(total) && total > 0 ? total : 19;
+            const frecuenciaConfig = getCalendarFrequencyConfig();
             const fechas = [];
 
             for (let i = 0; i < count; i += 1) {
-                fechas.push(formatISODate(addDays(inicio, i * 14)));
+                fechas.push(formatISODate(frecuenciaConfig.getDateAt(inicio, i)));
             }
 
             document.getElementById("calendarioPagos").value = fechas.join("\n");
