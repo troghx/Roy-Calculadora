@@ -6,19 +6,28 @@
     <title>Calculadora de Prestamos Universal</title>
     <style>
         :root {
-            --bg-1: #0b2742;
-            --bg-2: #0f4c6e;
-            --bg-3: #1f7a8c;
+            --bg-1: #170a2e;
+            --bg-2: #34135c;
+            --bg-3: #5f2192;
             --card: #ffffff;
-            --card-2: #f7fbff;
-            --text: #112035;
-            --muted: #4f5f74;
-            --line: #d7e1ec;
-            --primary: #006d77;
-            --primary-2: #00a3b0;
+            --card-2: #f8f2ff;
+            --text: #25163a;
+            --muted: #65527d;
+            --line: #dfd1f2;
+            --primary: #7c3aed;
+            --primary-2: #a855f7;
             --danger: #b42318;
             --warning: #b54708;
             --success: #027a48;
+            --results-1: #432371;
+            --results-2: #6a11cb;
+            --results-3: #9d4edd;
+            --info-bg: #f6f0ff;
+            --info-border: #d4b4fe;
+            --info-text: #6938ef;
+            --table-head-bg: #f5f0ff;
+            --table-head-text: #532b88;
+            --history-title: #4b2d75;
             --radius: 16px;
             --shadow: 0 16px 34px rgba(6, 26, 49, 0.15);
         }
@@ -36,10 +45,14 @@
 
         body {
             font-family: "Segoe UI", "Arial", sans-serif;
-            background:
-                radial-gradient(circle at 10% 10%, rgba(255, 255, 255, 0.18), transparent 45%),
-                radial-gradient(circle at 90% 20%, rgba(255, 255, 255, 0.1), transparent 45%),
-                linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%);
+            --bg-overlay: linear-gradient(125deg, rgba(24, 10, 44, 0.82), rgba(73, 23, 122, 0.74));
+            --bg-image: url("https://commons.wikimedia.org/wiki/Special:FilePath/BTS%20at%202017%20American%20Music%20Awards%20in%20Los%20Angeles,%2019%20November%202017%2001.jpg");
+            --bg-gradient: linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%);
+            background-image: var(--bg-overlay), var(--bg-image), var(--bg-gradient);
+            background-size: cover, cover, cover;
+            background-position: center, center, center;
+            background-repeat: no-repeat;
+            background-attachment: fixed, fixed, fixed;
             color: var(--text);
             padding: clamp(10px, 1.8vw, 20px);
         }
@@ -149,7 +162,7 @@
 
         .tipo-option.active {
             border-color: var(--primary);
-            background: #eef9fa;
+            background: #f6f0ff;
         }
 
         .tipo-option:hover {
@@ -204,7 +217,7 @@
         button:focus-visible {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(0, 109, 119, 0.16);
+            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.16);
         }
 
         .info-box {
@@ -216,9 +229,9 @@
         }
 
         .info-box.primary {
-            background: #eff8ff;
-            color: #175cd3;
-            border: 1px solid #b2ddff;
+            background: var(--info-bg);
+            color: var(--info-text);
+            border: 1px solid var(--info-border);
         }
 
         .info-box.success {
@@ -255,9 +268,9 @@
         }
 
         .btn-secondary {
-            color: #073143;
-            background: #d6f4f7;
-            border: 1px solid #9fdee5;
+            color: #4c1d95;
+            background: #f1e8ff;
+            border: 1px solid #d8b4fe;
         }
 
         .btn-danger {
@@ -271,9 +284,26 @@
             font-size: 0.82rem;
         }
 
+        .section-subtitle {
+            margin-top: 14px;
+            margin-bottom: 6px;
+            font-size: 0.92rem;
+            color: #4c1d95;
+        }
+
+        .custom-upload-wrap {
+            margin-top: 8px;
+        }
+
+        .small-note {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
         .results {
             color: #fff;
-            background: linear-gradient(140deg, #005f73 0%, #0a9396 52%, #26c6da 100%);
+            background: linear-gradient(140deg, var(--results-1) 0%, var(--results-2) 52%, var(--results-3) 100%);
             position: sticky;
             top: 10px;
         }
@@ -382,8 +412,8 @@
         }
 
         .schedule-table th {
-            background: #f0f7ff;
-            color: #123e7a;
+            background: var(--table-head-bg);
+            color: var(--table-head-text);
             font-size: 0.82rem;
             letter-spacing: 0.01em;
             text-transform: uppercase;
@@ -421,7 +451,7 @@
 
         .history-title {
             font-size: 0.92rem;
-            color: #1b365d;
+            color: var(--history-title);
             font-weight: 700;
         }
 
@@ -629,6 +659,34 @@
                         </div>
                     </div>
 
+                    <h3 class="section-subtitle">Personalizacion visual</h3>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="themePalette">Paleta de color</label>
+                            <select id="themePalette">
+                                <option value="bts-purple" selected>BTS Morado (predeterminado)</option>
+                                <option value="royal-violet">Royal Violeta</option>
+                                <option value="soft-lavender">Lavanda Suave</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label for="backgroundPreset">Fondo</label>
+                            <select id="backgroundPreset">
+                                <option value="bts-default" selected>Imagen BTS</option>
+                                <option value="purple-gradient">Gradiente Morado</option>
+                                <option value="night-violet">Noche Violeta</option>
+                                <option value="custom-upload">Subir mi imagen</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="customBackgroundWrap" class="custom-upload-wrap hidden">
+                        <div class="input-group">
+                            <label for="customBackgroundFile">Subir imagen de fondo</label>
+                            <input type="file" id="customBackgroundFile" accept="image/*">
+                        </div>
+                        <p class="small-note">Recomendado: imagen horizontal menor a 2 MB para mejor rendimiento.</p>
+                    </div>
+
                     <div class="btn-row">
                         <button id="btnCalcular" class="btn btn-primary" type="button">Calcular balance</button>
                         <button id="btnLimpiar" class="btn btn-danger" type="button">Limpiar formulario</button>
@@ -714,7 +772,8 @@
     <script>
         const STORAGE_KEYS = {
             history: "prestamoHistorial",
-            lastData: "prestamoLastData"
+            lastData: "prestamoLastData",
+            uiPrefs: "prestamoUiPrefs"
         };
 
         const FIELD_IDS = [
@@ -732,8 +791,69 @@
             "montoUltimoPago",
             "calendarioPagos",
             "taxes",
-            "historialMaximo"
+            "historialMaximo",
+            "themePalette",
+            "backgroundPreset"
         ];
+
+        const DEFAULT_BTS_BACKGROUND = "https://commons.wikimedia.org/wiki/Special:FilePath/BTS%20at%202017%20American%20Music%20Awards%20in%20Los%20Angeles,%2019%20November%202017%2001.jpg";
+
+        const THEME_PRESETS = {
+            "bts-purple": {
+                "--bg-1": "#170a2e",
+                "--bg-2": "#34135c",
+                "--bg-3": "#5f2192",
+                "--primary": "#7c3aed",
+                "--primary-2": "#a855f7",
+                "--line": "#dfd1f2",
+                "--muted": "#65527d",
+                "--results-1": "#432371",
+                "--results-2": "#6a11cb",
+                "--results-3": "#9d4edd"
+            },
+            "royal-violet": {
+                "--bg-1": "#15092a",
+                "--bg-2": "#2f0e58",
+                "--bg-3": "#4a148c",
+                "--primary": "#8b5cf6",
+                "--primary-2": "#c084fc",
+                "--line": "#d7c5ee",
+                "--muted": "#5f4e78",
+                "--results-1": "#3b1f70",
+                "--results-2": "#5b21b6",
+                "--results-3": "#8b5cf6"
+            },
+            "soft-lavender": {
+                "--bg-1": "#21123d",
+                "--bg-2": "#4a216f",
+                "--bg-3": "#8255b0",
+                "--primary": "#7e22ce",
+                "--primary-2": "#c084fc",
+                "--line": "#e5d5fa",
+                "--muted": "#6f5d85",
+                "--results-1": "#5b2a86",
+                "--results-2": "#8b5cf6",
+                "--results-3": "#b07cf7"
+            }
+        };
+
+        const BACKGROUND_PRESETS = {
+            "bts-default": {
+                image: `url("${DEFAULT_BTS_BACKGROUND}")`,
+                overlay: "linear-gradient(125deg, rgba(24, 10, 44, 0.82), rgba(73, 23, 122, 0.74))",
+                gradient: "linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%)"
+            },
+            "purple-gradient": {
+                image: "none",
+                overlay: "radial-gradient(circle at 12% 15%, rgba(255,255,255,0.15), transparent 40%), radial-gradient(circle at 86% 22%, rgba(255,255,255,0.1), transparent 44%)",
+                gradient: "linear-gradient(130deg, #1c0f32 0%, #4c1d95 58%, #7e22ce 100%)"
+            },
+            "night-violet": {
+                image: "none",
+                overlay: "radial-gradient(circle at 20% 25%, rgba(167,139,250,0.35), transparent 42%), radial-gradient(circle at 80% 18%, rgba(216,180,254,0.2), transparent 44%)",
+                gradient: "linear-gradient(130deg, #0f071f 0%, #2e1065 56%, #581c87 100%)"
+            }
+        };
 
         const currency = new Intl.NumberFormat("es-ES", {
             style: "currency",
@@ -743,11 +863,13 @@
 
         let tipoActual = "frecuencia";
         let historial = [];
+        let customBackgroundData = "";
 
         document.addEventListener("DOMContentLoaded", () => {
             bindEvents();
             applyDefaultValues();
             loadLastData();
+            initVisualPreferences();
             historial = normalizeHistory(safeReadJSON(STORAGE_KEYS.history, []));
             renderHistory();
             setTipo(tipoActual, false);
@@ -763,6 +885,9 @@
             document.getElementById("btnGenerarCalendario").addEventListener("click", generarCalendarioAutomatico);
             document.getElementById("btnAnalizarCalendario").addEventListener("click", analizarCalendario);
             document.getElementById("btnLimpiarHistorial").addEventListener("click", limpiarHistorial);
+            document.getElementById("themePalette").addEventListener("change", applyVisualPreferences);
+            document.getElementById("backgroundPreset").addEventListener("change", applyVisualPreferences);
+            document.getElementById("customBackgroundFile").addEventListener("change", handleCustomBackgroundUpload);
 
             document.getElementById("historialLista").addEventListener("click", (event) => {
                 const loadBtn = event.target.closest("[data-history-load]");
@@ -803,6 +928,8 @@
             setValue("montoUltimoPago", "134.22");
             setValue("taxes", "0");
             setValue("historialMaximo", "10");
+            setValue("themePalette", "bts-purple");
+            setValue("backgroundPreset", "bts-default");
 
             generarCalendarioEjemplo();
             hideResults();
@@ -832,6 +959,94 @@
             if (save) {
                 saveLastData();
             }
+        }
+
+        function initVisualPreferences() {
+            const savedPrefs = safeReadJSON(STORAGE_KEYS.uiPrefs, {});
+            if (savedPrefs && typeof savedPrefs === "object") {
+                if (savedPrefs.themePalette) {
+                    setValue("themePalette", savedPrefs.themePalette);
+                }
+                if (savedPrefs.backgroundPreset) {
+                    setValue("backgroundPreset", savedPrefs.backgroundPreset);
+                }
+                if (savedPrefs.customBackground) {
+                    customBackgroundData = String(savedPrefs.customBackground);
+                }
+            }
+
+            applyVisualPreferences(false);
+        }
+
+        function applyVisualPreferences(save = true) {
+            const theme = document.getElementById("themePalette").value || "bts-purple";
+            const background = document.getElementById("backgroundPreset").value || "bts-default";
+            const root = document.documentElement;
+            const body = document.body;
+            const themePreset = THEME_PRESETS[theme] || THEME_PRESETS["bts-purple"];
+            const backgroundWrap = document.getElementById("customBackgroundWrap");
+
+            Object.entries(themePreset).forEach(([cssVar, cssValue]) => {
+                root.style.setProperty(cssVar, cssValue);
+            });
+
+            if (background === "custom-upload") {
+                backgroundWrap.classList.remove("hidden");
+                if (customBackgroundData) {
+                    body.style.setProperty("--bg-image", `url("${customBackgroundData}")`);
+                    body.style.setProperty("--bg-overlay", "linear-gradient(125deg, rgba(24, 10, 44, 0.66), rgba(73, 23, 122, 0.55))");
+                    body.style.setProperty("--bg-gradient", "linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%)");
+                } else {
+                    const fallback = BACKGROUND_PRESETS["purple-gradient"];
+                    body.style.setProperty("--bg-image", fallback.image);
+                    body.style.setProperty("--bg-overlay", fallback.overlay);
+                    body.style.setProperty("--bg-gradient", fallback.gradient);
+                }
+            } else {
+                backgroundWrap.classList.add("hidden");
+                const preset = BACKGROUND_PRESETS[background] || BACKGROUND_PRESETS["bts-default"];
+                body.style.setProperty("--bg-image", preset.image);
+                body.style.setProperty("--bg-overlay", preset.overlay);
+                body.style.setProperty("--bg-gradient", preset.gradient);
+            }
+
+            if (save) {
+                saveVisualPreferences();
+                saveLastData();
+            }
+        }
+
+        function handleCustomBackgroundUpload(event) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            if (file.size > 2 * 1024 * 1024) {
+                showFeedback("La imagen excede 2 MB. Usa una imagen mas liviana.", "error");
+                event.target.value = "";
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = () => {
+                customBackgroundData = String(reader.result || "");
+                setValue("backgroundPreset", "custom-upload");
+                applyVisualPreferences();
+                showFeedback("Fondo personalizado aplicado correctamente.", "success");
+            };
+            reader.onerror = () => {
+                showFeedback("No se pudo leer la imagen seleccionada.", "error");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function saveVisualPreferences() {
+            safeWriteJSON(STORAGE_KEYS.uiPrefs, {
+                themePalette: document.getElementById("themePalette").value || "bts-purple",
+                backgroundPreset: document.getElementById("backgroundPreset").value || "bts-default",
+                customBackground: customBackgroundData || ""
+            });
         }
 
         function calcular() {
@@ -1156,6 +1371,9 @@
             applyDefaultValues();
             setTipo("frecuencia", false);
             safeRemove(STORAGE_KEYS.lastData);
+            safeRemove(STORAGE_KEYS.uiPrefs);
+            customBackgroundData = "";
+            applyVisualPreferences(false);
             showFeedback("Formulario restablecido.", "success");
         }
 
