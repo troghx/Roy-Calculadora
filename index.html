@@ -3,39 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Prestamos Universal</title>
+    <title>Loan Studio</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Manrope:wght@400;600;700&display=swap');
+
         :root {
-            --bg-1: #170a2e;
-            --bg-2: #34135c;
-            --bg-3: #5f2192;
-            --card: #ffffff;
-            --card-2: #f8f2ff;
-            --text: #25163a;
-            --muted: #65527d;
-            --line: #dfd1f2;
+            --bg-1: #1a0a2e;
+            --bg-2: #2d1b4e;
+            --bg-3: #4a1d7a;
+            --ink-1: #1f1133;
+            --ink-2: #6b5b7a;
+            --line: rgba(124, 58, 237, 0.15);
+            --card: rgba(255, 255, 255, 0.95);
+            --card-solid: #ffffff;
             --primary: #7c3aed;
             --primary-2: #a855f7;
-            --danger: #b42318;
-            --warning: #b54708;
-            --success: #027a48;
-            --results-1: #432371;
-            --results-2: #6a11cb;
-            --results-3: #9d4edd;
-            --info-bg: #f6f0ff;
-            --info-border: #d4b4fe;
-            --info-text: #6938ef;
-            --table-head-bg: #f5f0ff;
-            --table-head-text: #532b88;
-            --history-title: #4b2d75;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
             --radius: 16px;
-            --shadow: 0 16px 34px rgba(6, 26, 49, 0.15);
+            --radius-lg: 24px;
+            --shadow: 0 8px 32px rgba(124, 58, 237, 0.12);
+            --shadow-lg: 0 20px 60px rgba(20, 5, 45, 0.25);
+            --results-a: #5b21b6;
+            --results-b: #7c3aed;
+            --results-c: #a855f7;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        *::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background: transparent;
         }
 
         html,
@@ -44,147 +50,207 @@
         }
 
         body {
-            font-family: "Segoe UI", "Arial", sans-serif;
-            --bg-overlay: linear-gradient(125deg, rgba(24, 10, 44, 0.82), rgba(73, 23, 122, 0.74));
-            --bg-image: url("https://commons.wikimedia.org/wiki/Special:FilePath/BTS%20at%202017%20American%20Music%20Awards%20in%20Los%20Angeles,%2019%20November%202017%2001.jpg");
-            --bg-gradient: linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%);
-            background-image: var(--bg-overlay), var(--bg-image), var(--bg-gradient);
-            background-size: cover, cover, cover;
-            background-position: center, center, center;
-            background-repeat: no-repeat;
-            background-attachment: fixed, fixed, fixed;
-            color: var(--text);
-            padding: clamp(10px, 1.8vw, 20px);
+            font-family: "Manrope", "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+            min-height: 100vh;
+            color: var(--ink-1);
+            padding: 24px;
         }
 
-        [hidden],
-        .hidden {
+        .hidden,
+        [hidden] {
             display: none !important;
         }
 
-        .app-shell {
-            width: min(1280px, 100%);
+        .page-shell {
+            width: min(1200px, 100%);
             margin: 0 auto;
-        }
-
-        .app-header {
-            margin-bottom: 18px;
-            color: #ffffff;
-        }
-
-        .app-header h1 {
-            font-size: clamp(1.45rem, 2.1vw, 2.25rem);
-            line-height: 1.2;
-        }
-
-        .app-header p {
-            margin-top: 8px;
-            font-size: clamp(0.9rem, 1.1vw, 1.02rem);
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .main-grid {
             display: grid;
-            grid-template-columns: minmax(0, 1.1fr) minmax(320px, 0.9fr);
-            gap: clamp(14px, 1.8vw, 22px);
-            align-items: start;
+            gap: 16px;
+            position: relative;
         }
 
-        .panel-right {
-            display: grid;
-            gap: clamp(14px, 1.6vw, 20px);
-            align-content: start;
+        .topline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
         }
 
-        .card {
-            background: var(--card);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: clamp(14px, 2.2vw, 24px);
-        }
-
-        .card h2 {
-            font-size: clamp(1.05rem, 1.45vw, 1.35rem);
-            margin-bottom: 14px;
-            color: var(--text);
-        }
-
-        .feedback {
-            border-radius: 12px;
-            padding: 11px 12px;
-            margin-bottom: 14px;
-            font-size: 0.92rem;
-            line-height: 1.3;
-        }
-
-        .feedback.error {
-            background: #fef3f2;
-            border: 1px solid #fecdca;
-            color: var(--danger);
-        }
-
-        .feedback.success {
-            background: #ecfdf3;
-            border: 1px solid #abefc6;
-            color: var(--success);
-        }
-
-        .tipo-selector {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+        .chip-row {
+            display: flex;
             gap: 10px;
-            margin-bottom: 14px;
+            flex-wrap: wrap;
         }
 
-        .tipo-option {
-            border: 2px solid var(--line);
-            border-radius: 12px;
-            padding: 12px;
-            text-align: left;
-            background: #fff;
-            color: var(--text);
+        .top-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .top-customize-btn {
+            border: none;
+            border-radius: 50px;
+            min-height: 40px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: border-color 0.2s ease, transform 0.2s ease, background 0.2s ease;
+            backdrop-filter: blur(20px);
+            transition: all 0.2s ease;
         }
 
-        .tipo-option strong {
-            display: block;
-            font-size: 0.96rem;
-            margin-bottom: 4px;
-        }
-
-        .tipo-option span {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--muted);
-            line-height: 1.25;
-        }
-
-        .tipo-option.active {
-            border-color: var(--primary);
-            background: #f6f0ff;
-        }
-
-        .tipo-option:hover {
+        .top-customize-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
             transform: translateY(-1px);
         }
 
-        .input-row {
+        .customizer-panel {
+            background: var(--card);
+        }
+
+        .customizer-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .chip {
+            border: none;
+            color: #fff;
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .workspace {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(360px, 0.9fr);
+            gap: 20px;
+            align-items: start;
+        }
+
+        .right-stack {
+            display: grid;
+            gap: 16px;
+            align-content: start;
+        }
+
+        .panel {
+            border-radius: var(--radius-lg);
+            background: var(--card);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            backdrop-filter: blur(20px);
+        }
+
+        .panel h2,
+        .panel h3 {
+            font-family: "Space Grotesk", "Manrope", sans-serif;
+            letter-spacing: 0.01em;
+        }
+
+        .section-block {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .section-block:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .section-title {
+            font-size: 1rem;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .mini-note {
+            font-size: 0.8rem;
+            color: var(--ink-2);
+            font-weight: 500;
+        }
+
+        .mode-switch {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-bottom: 10px;
+            gap: 12px;
         }
 
-        .input-group {
-            display: grid;
-            gap: 5px;
-        }
-
-        .input-group label {
-            font-size: 0.86rem;
+        .mode-btn {
+            border: 2px solid transparent;
+            border-radius: var(--radius);
+            min-height: 56px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
             font-weight: 600;
-            color: var(--muted);
+            color: var(--ink-2);
+            background: #f8f5ff;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .mode-btn span {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: var(--ink-2);
+            margin-top: 4px;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--line);
+            background: #f0ebff;
+        }
+
+        .mode-btn.active {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.3);
+        }
+
+        .mode-btn.active span {
+            color: rgba(255, 255, 255, 0.85);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .field {
+            display: grid;
+            gap: 6px;
+        }
+
+        .field.full {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--ink-2);
+            font-weight: 600;
         }
 
         input,
@@ -197,18 +263,20 @@
         input,
         select,
         textarea {
-            width: 100%;
             border: 2px solid var(--line);
-            border-radius: 10px;
-            padding: 10px 11px;
-            min-height: 42px;
-            color: var(--text);
+            border-radius: 12px;
             background: #fff;
+            color: var(--ink-1);
+            padding: 12px 16px;
+            min-height: 48px;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
 
         textarea {
+            min-height: 120px;
             resize: vertical;
-            min-height: 130px;
+            line-height: 1.5;
         }
 
         input:focus,
@@ -217,306 +285,407 @@
         button:focus-visible {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.16);
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.15);
         }
 
-        .info-box {
-            border-radius: 12px;
-            padding: 11px 12px;
-            font-size: 0.86rem;
-            margin-bottom: 10px;
-            line-height: 1.35;
-        }
-
-        .info-box.primary {
-            background: var(--info-bg);
-            color: var(--info-text);
-            border: 1px solid var(--info-border);
-        }
-
-        .info-box.success {
-            background: #ecfdf3;
-            color: var(--success);
-            border: 1px solid #abefc6;
-        }
-
-        .btn-row {
+        .calendar-tools {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 10px;
-            margin-top: 10px;
+            gap: 12px;
+            margin-top: 12px;
         }
 
         .btn {
             border: none;
-            border-radius: 10px;
-            min-height: 42px;
-            padding: 10px 12px;
-            font-weight: 600;
+            border-radius: 12px;
+            min-height: 48px;
             cursor: pointer;
-            transition: transform 0.2s ease, filter 0.2s ease;
+            padding: 12px 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
         }
 
         .btn:hover {
-            transform: translateY(-1px);
-            filter: brightness(0.98);
+            transform: translateY(-2px);
         }
 
         .btn-primary {
             color: #fff;
-            background: linear-gradient(120deg, var(--primary) 0%, var(--primary-2) 100%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-2));
+            box-shadow: 0 4px 16px rgba(124, 58, 237, 0.35);
         }
 
-        .btn-secondary {
-            color: #4c1d95;
-            background: #f1e8ff;
-            border: 1px solid #d8b4fe;
+        .btn-primary:hover {
+            box-shadow: 0 6px 24px rgba(124, 58, 237, 0.45);
+        }
+
+        .btn-soft {
+            color: var(--primary);
+            background: #f5f0ff;
+            border: 2px solid var(--line);
+        }
+
+        .btn-soft:hover {
+            background: #ede5ff;
+            border-color: rgba(124, 58, 237, 0.3);
         }
 
         .btn-danger {
             color: #fff;
-            background: #c43227;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
         }
 
-        .hint {
-            margin-top: 8px;
-            color: var(--muted);
-            font-size: 0.82rem;
-        }
-
-        .section-subtitle {
-            margin-top: 14px;
-            margin-bottom: 6px;
-            font-size: 0.92rem;
-            color: #4c1d95;
-        }
-
-        .custom-upload-wrap {
-            margin-top: 8px;
-        }
-
-        .small-note {
-            margin-top: 6px;
-            color: var(--muted);
-            font-size: 0.78rem;
-        }
-
-        .results {
-            color: #fff;
-            background: linear-gradient(140deg, var(--results-1) 0%, var(--results-2) 52%, var(--results-3) 100%);
-            position: sticky;
-            top: 10px;
-        }
-
-        .results h2 {
-            color: #fff;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.35);
-            padding-bottom: 10px;
-            margin-bottom: 10px;
-        }
-
-        .result-grid {
+        .actions {
+            margin-top: 20px;
             display: grid;
-            gap: 8px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
         }
 
-        .result-item {
-            background: rgba(255, 255, 255, 0.18);
-            border: 1px solid rgba(255, 255, 255, 0.22);
-            border-radius: 12px;
-            padding: 10px;
+        .feedback {
+            margin-bottom: 16px;
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            border: none;
         }
 
-        .result-label {
-            font-size: 0.8rem;
-            opacity: 0.92;
-            margin-bottom: 4px;
+        .feedback.error {
+            background: linear-gradient(135deg, #fef2f2, #fee2e2);
+            color: #991b1b;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.1);
         }
 
-        .result-value {
-            font-size: 1.45rem;
+        .feedback.success {
+            background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+            color: #166534;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+        }
+
+        .results-panel {
+            color: #fff;
+            background: linear-gradient(145deg, var(--results-a) 0%, var(--results-b) 50%, var(--results-c) 100%);
+            position: sticky;
+            top: 24px;
+            border: none;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .results-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .results-head h2 {
+            font-size: 1.1rem;
             font-weight: 700;
         }
 
-        .result-value.small {
-            font-size: 1rem;
+        .live-pill {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            background: rgba(255, 255, 255, 0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
             font-weight: 600;
-            line-height: 1.35;
         }
 
-        .result-item.highlight {
-            border-color: rgba(255, 255, 255, 0.68);
-            background: rgba(255, 255, 255, 0.24);
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .kpi {
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .kpi-label {
+            font-size: 0.75rem;
+            opacity: 0.85;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .kpi-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .kpi-value.big {
+            font-size: 1.6rem;
+        }
+
+        .copy-balance-btn {
+            margin-top: 10px;
+            width: 100%;
+            min-height: 40px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .copy-balance-btn:hover:not(:disabled) {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-1px);
+        }
+
+        .copy-balance-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .progress-wrap {
+            margin-top: 16px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            padding: 12px;
         }
 
         .progress-bar {
-            width: 100%;
-            height: 12px;
-            border-radius: 99px;
-            background: rgba(255, 255, 255, 0.3);
+            height: 8px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.25);
             overflow: hidden;
-            margin-top: 8px;
         }
 
         .progress-fill {
             width: 0%;
             height: 100%;
-            background: #fff;
+            background: linear-gradient(90deg, #fff, rgba(255,255,255,0.8));
+            border-radius: 10px;
             transition: width 0.3s ease;
         }
 
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            border-radius: 999px;
-            padding: 4px 9px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.01em;
+        .progress-meta {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            opacity: 0.9;
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-weight: 500;
         }
 
-        .status-ok {
-            color: #065f46;
-            background: #d1fae5;
+        .status-banner {
+            margin-top: 16px;
+            border-radius: var(--radius);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 14px;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            background: rgba(255, 255, 255, 0.1);
         }
 
-        .status-late {
-            color: #7a271a;
-            background: #fee4e2;
+        .status-banner.ok {
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.2);
         }
 
-        .status-done {
-            color: #164e63;
-            background: #cffafe;
+        .status-banner.warn {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.2);
+        }
+
+        .status-banner.danger {
+            border-color: rgba(239, 68, 68, 0.4);
+            background: rgba(239, 68, 68, 0.2);
         }
 
         .table-wrap {
-            overflow-x: auto;
-            border-radius: 10px;
             border: 1px solid var(--line);
+            border-radius: var(--radius);
+            overflow-x: auto;
         }
 
-        .schedule-table {
+        table {
             width: 100%;
-            border-collapse: collapse;
-            font-size: 0.87rem;
-            min-width: 520px;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 540px;
+            font-size: 0.9rem;
         }
 
-        .schedule-table th,
-        .schedule-table td {
+        th,
+        td {
             text-align: left;
-            padding: 9px 10px;
+            padding: 12px 16px;
             border-bottom: 1px solid var(--line);
         }
 
-        .schedule-table th {
-            background: var(--table-head-bg);
-            color: var(--table-head-text);
-            font-size: 0.82rem;
-            letter-spacing: 0.01em;
+        th {
             text-transform: uppercase;
+            font-size: 0.75rem;
+            color: var(--primary);
+            background: #faf5ff;
+            letter-spacing: 0.05em;
+            font-weight: 700;
         }
 
-        .row-paid {
-            background: #eefdf3;
+        th:first-child {
+            border-radius: var(--radius) 0 0 0;
         }
 
-        .row-overdue {
-            background: #fff6f5;
+        th:last-child {
+            border-radius: 0 var(--radius) 0 0;
         }
 
-        .row-due {
-            background: #fffaeb;
+        tr.row-paid {
+            background: linear-gradient(90deg, #f0fdf4, #ecfdf5);
         }
 
-        .row-future {
-            background: #f8fafc;
+        tr.row-overdue {
+            background: linear-gradient(90deg, #fef2f2, #fef2f2);
+        }
+
+        tr.row-due {
+            background: linear-gradient(90deg, #fffbeb, #fffbeb);
+        }
+
+        tr.row-future {
+            background: transparent;
+        }
+
+        .history-head {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            margin-bottom: 12px;
         }
 
         .history-list {
             display: grid;
-            gap: 8px;
+            gap: 10px;
         }
 
         .history-item {
+            border-radius: var(--radius);
             border: 1px solid var(--line);
-            border-radius: 10px;
-            padding: 10px;
-            background: var(--card-2);
+            background: #fdfbff;
+            padding: 16px;
             display: grid;
-            gap: 8px;
+            gap: 10px;
+            transition: all 0.2s ease;
+        }
+
+        .history-item:hover {
+            border-color: rgba(124, 58, 237, 0.3);
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.08);
         }
 
         .history-title {
-            font-size: 0.92rem;
-            color: var(--history-title);
+            font-size: 0.95rem;
+            color: var(--primary);
             font-weight: 700;
         }
 
         .history-meta {
-            font-size: 0.79rem;
-            color: var(--muted);
-            line-height: 1.3;
+            font-size: 0.8rem;
+            color: var(--ink-2);
+            line-height: 1.5;
         }
 
         .history-actions {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 8px;
+            gap: 10px;
         }
 
         .history-empty {
-            color: var(--muted);
             text-align: center;
+            color: var(--ink-2);
             font-size: 0.9rem;
-            padding: 8px 0;
+            padding: 20px;
         }
 
-        .history-tools {
-            margin-top: 10px;
+        .foot-note {
+            margin-top: 16px;
+            font-size: 0.8rem;
+            color: var(--ink-2);
+            line-height: 1.5;
         }
 
-        @media (max-width: 1100px) {
-            .main-grid {
+        @media (max-width: 1120px) {
+            .workspace {
                 grid-template-columns: 1fr;
             }
 
-            .results {
+            .results-panel {
                 position: static;
             }
         }
 
-        @media (max-width: 760px) {
-            .tipo-selector,
-            .input-row,
-            .btn-row,
-            .history-actions {
+        @media (max-width: 780px) {
+            body {
+                padding: 16px;
+            }
+
+            .panel {
+                padding: 20px;
+            }
+
+            .mode-switch,
+            .form-grid,
+            .calendar-tools,
+            .actions,
+            .kpi-grid,
+            .history-actions,
+            .customizer-grid {
                 grid-template-columns: 1fr;
             }
 
-            .card {
-                border-radius: 12px;
-                padding: 12px;
+            .topline {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .top-actions {
+                width: 100%;
+            }
+
+            .top-customize-btn {
+                width: 100%;
             }
         }
 
-        @media (max-height: 800px) and (min-width: 1101px) {
+        @media (max-height: 800px) and (min-width: 1121px) {
             body {
-                padding: 10px;
+                padding: 16px;
             }
 
-            .app-header {
-                margin-bottom: 12px;
+            .panel {
+                padding: 20px;
             }
 
-            .card {
-                padding: 12px 14px;
+            .section-block {
+                margin-bottom: 16px;
+                padding-bottom: 12px;
             }
 
             .history {
-                max-height: 260px;
+                max-height: 280px;
                 overflow: auto;
             }
         }
@@ -530,221 +699,245 @@
     </style>
 </head>
 <body>
-    <div class="app-shell">
-        <header class="app-header">
-            <h1>Calculadora de Prestamos Universal</h1>
-            <p>Compatible con GitHub Pages: sin backend, guardado local y calculos en el navegador.</p>
-        </header>
+    <div class="page-shell">
+        <div class="topline">
+            <div class="chip-row">
+                <span class="chip">Live Calculator</span>
+                <span class="chip" id="todayChip">Hoy</span>
+                <span class="chip" id="modeChip">Modo: Frecuencia</span>
+            </div>
+            <div class="top-actions">
+                <span class="chip">GitHub Pages Ready</span>
+                <button id="btnToggleCustomizer" class="top-customize-btn" type="button" aria-expanded="false" aria-controls="customizerPanel">Personalizacion</button>
+            </div>
+        </div>
 
-        <main class="main-grid">
-            <section class="card" aria-labelledby="datosHeading">
-                <h2 id="datosHeading">Datos del prestamo</h2>
+        <section id="customizerPanel" class="panel customizer-panel hidden">
+            <div class="section-head">
+                <h3 class="section-title">Personalizacion visual</h3>
+                <span class="mini-note">Configura tema y fondo sin ocupar espacio de calculo</span>
+            </div>
+            <div class="customizer-grid">
+                <div class="field">
+                    <label for="themePalette">Paleta</label>
+                    <select id="themePalette">
+                        <option value="bts-purple" selected>BTS Purple</option>
+                        <option value="royal-violet">Royal Violet</option>
+                        <option value="lavender-shift">Lavender Shift</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label for="backgroundPreset">Fondo</label>
+                    <select id="backgroundPreset">
+                        <option value="bts-default" selected>BTS Default</option>
+                        <option value="purple-gradient">Purple Gradient</option>
+                        <option value="galaxy-night">Galaxy Night</option>
+                        <option value="custom-upload">Imagen propia</option>
+                    </select>
+                </div>
+                <div class="field hidden" id="customBackgroundWrap">
+                    <label for="customBackgroundFile">Subir imagen (max 2MB)</label>
+                    <input type="file" id="customBackgroundFile" accept="image/*">
+                </div>
+            </div>
+        </section>
 
+        <main class="workspace">
+            <section class="panel controls-panel">
                 <div id="feedback" class="feedback hidden" role="status" aria-live="polite"></div>
 
-                <div class="tipo-selector" role="group" aria-label="Tipo de prestamo">
-                    <button class="tipo-option active" type="button" data-tipo="frecuencia" aria-pressed="true">
-                        <strong>Por frecuencia</strong>
-                        <span>Pagos semanales, quincenales o mensuales.</span>
-                    </button>
-                    <button class="tipo-option" type="button" data-tipo="calendario" aria-pressed="false">
-                        <strong>Por calendario</strong>
-                        <span>Fechas exactas segun contrato.</span>
-                    </button>
+                <div class="section-block">
+                    <div class="section-head">
+                        <h2 class="section-title">1) Tipo de calculo</h2>
+                        <span class="mini-note">Cambia entre reglas por frecuencia o por calendario</span>
+                    </div>
+                    <div class="mode-switch" role="group" aria-label="Modo de calculo">
+                        <button type="button" class="mode-btn active" data-mode="frecuencia" aria-pressed="true">
+                            Frecuencia
+                            <span>Semanal, quincenal o mensual</span>
+                        </button>
+                        <button type="button" class="mode-btn" data-mode="calendario" aria-pressed="false">
+                            Calendario
+                            <span>Fechas exactas del contrato</span>
+                        </button>
+                    </div>
                 </div>
 
-                <form id="prestamoForm" novalidate>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="nombreAcreedor">Nombre del acreedor</label>
-                            <input type="text" id="nombreAcreedor" autocomplete="organization">
+                <form id="loanForm" novalidate>
+                    <div class="section-block">
+                        <div class="section-head">
+                            <h3 class="section-title">2) Datos base del prestamo</h3>
+                            <span class="mini-note">Estos campos alimentan ambos modos</span>
                         </div>
-                        <div class="input-group">
-                            <label for="idContrato">ID del contrato</label>
-                            <input type="text" id="idContrato" autocomplete="off">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="nombreAcreedor">Acreedor</label>
+                                <input type="text" id="nombreAcreedor" placeholder="Ej: CreditNinja">
+                            </div>
+                            <div class="field">
+                                <label for="idContrato">Contrato / ID</label>
+                                <input type="text" id="idContrato" placeholder="Ej: 8814712">
+                            </div>
+                            <div class="field">
+                                <label for="fechaAcuerdo">Fecha acuerdo</label>
+                                <input type="date" id="fechaAcuerdo">
+                            </div>
+                            <div class="field">
+                                <label for="fechaActual">Fecha actual</label>
+                                <input type="date" id="fechaActual">
+                            </div>
+                            <div class="field">
+                                <label for="totalPagos">Monto total contrato</label>
+                                <input type="number" id="totalPagos" min="0" step="0.01">
+                            </div>
+                            <div class="field">
+                                <label for="montoPago">Monto por cuota</label>
+                                <input type="number" id="montoPago" min="0" step="0.01">
+                            </div>
+                            <div class="field">
+                                <label for="taxes">Impuestos / cargos</label>
+                                <input type="number" id="taxes" min="0" step="0.01" value="0">
+                            </div>
+                            <div class="field">
+                                <label for="pagosRealizadosManual">Pagos realizados manual (opcional)</label>
+                                <input type="number" id="pagosRealizadosManual" min="0" step="1" placeholder="Auto">
+                            </div>
+                            <div class="field">
+                                <label for="montoPagoInicial">Pago inicial diferente (opcional)</label>
+                                <input type="number" id="montoPagoInicial" min="0" step="0.01" placeholder="Si el primer pago cambia">
+                            </div>
+                            <div class="field">
+                                <label for="montoPagoFinal">Pago final diferente (opcional)</label>
+                                <input type="number" id="montoPagoFinal" min="0" step="0.01" placeholder="Si el ultimo pago cambia">
+                            </div>
                         </div>
                     </div>
-
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="fechaAcuerdo">Fecha del acuerdo</label>
-                            <input type="date" id="fechaAcuerdo">
+                    <section id="modeFrecuencia" class="section-block">
+                        <div class="section-head">
+                            <h3 class="section-title">3) Parametros por frecuencia</h3>
                         </div>
-                        <div class="input-group">
-                            <label for="fechaActual">Fecha actual</label>
-                            <input type="date" id="fechaActual">
-                        </div>
-                    </div>
-
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="totalPagos">Monto total del contrato</label>
-                            <input type="number" id="totalPagos" step="0.01" min="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="montoPago">Monto por cuota</label>
-                            <input type="number" id="montoPago" step="0.01" min="0">
-                        </div>
-                    </div>
-
-                    <section id="modo-frecuencia">
-                        <div class="info-box primary">
-                            Se calcula el numero de pagos esperados desde la fecha de acuerdo.
-                        </div>
-                        <div class="input-row">
-                            <div class="input-group">
-                                <label for="frecuencia">Frecuencia de pago</label>
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="frecuencia">Frecuencia de cobro</label>
                                 <select id="frecuencia">
                                     <option value="7">Semanal (7 dias)</option>
-                                    <option value="14">Quincenal (14 dias)</option>
+                                    <option value="14" selected>Quincenal (14 dias)</option>
                                     <option value="15">Quincenal (15 dias)</option>
                                     <option value="30">Mensual (30 dias)</option>
                                 </select>
                             </div>
-                            <div class="input-group">
-                                <label for="pagosRealizadosManual">Pagos realizados (opcional)</label>
-                                <input type="number" id="pagosRealizadosManual" min="0" step="1" placeholder="Auto">
+                            <div class="field">
+                                <label for="historialMaximo">Maximo historial</label>
+                                <input type="number" id="historialMaximo" min="5" max="20" step="1" value="10">
                             </div>
                         </div>
                     </section>
 
-                    <section id="modo-calendario" hidden>
-                        <div class="info-box primary">
-                            Ingresa una fecha por linea en formato YYYY-MM-DD. Puedes generarlas por semana, quincena o mensual.
+                    <section id="modeCalendario" class="section-block hidden">
+                        <div class="section-head">
+                            <h3 class="section-title">3) Parametros por calendario</h3>
+                            <span class="mini-note">Puedes generar fechas de forma automatica</span>
                         </div>
-                        <div class="input-row">
-                            <div class="input-group">
-                                <label for="primeraFechaPago">Primera fecha de pago</label>
+                        <div class="form-grid">
+                            <div class="field">
+                                <label for="primeraFechaPago">Primera fecha pago</label>
                                 <input type="date" id="primeraFechaPago">
                             </div>
-                            <div class="input-group">
-                                <label for="numeroTotalPagos">Numero total de pagos</label>
+                            <div class="field">
+                                <label for="numeroTotalPagos">Numero de pagos</label>
                                 <input type="number" id="numeroTotalPagos" min="1" step="1">
                             </div>
-                        </div>
-                        <div class="input-row">
-                            <div class="input-group">
-                                <label for="frecuenciaCalendario">Frecuencia del calendario</label>
+                            <div class="field">
+                                <label for="frecuenciaCalendario">Cadencia calendario</label>
                                 <select id="frecuenciaCalendario">
                                     <option value="semanal">Semanal</option>
                                     <option value="quincenal" selected>Quincenal</option>
                                     <option value="mensual">Mensual</option>
                                 </select>
                             </div>
-                            <div class="input-group">
-                                <label for="montoUltimoPago">Monto del ultimo pago (opcional)</label>
-                                <input type="number" id="montoUltimoPago" min="0" step="0.01">
+                            <div class="field full">
+                                <label for="calendarioPagos">Fechas (una por linea YYYY-MM-DD)</label>
+                                <textarea id="calendarioPagos" placeholder="2026-01-15&#10;2026-01-29&#10;2026-02-12"></textarea>
                             </div>
                         </div>
-                        <div class="input-row">
-                            <div class="input-group" style="grid-column: 1 / -1;">
-                                <label for="calendarioPagos">Fechas de pago</label>
-                                <textarea id="calendarioPagos" rows="8" placeholder="2026-01-15&#10;2026-01-29&#10;2026-02-12"></textarea>
-                            </div>
-                        </div>
-                        <div class="btn-row">
-                            <button id="btnGenerarCalendario" class="btn btn-secondary" type="button">Generar calendario automatico</button>
-                            <button id="btnAnalizarCalendario" class="btn btn-secondary" type="button">Analizar calendario</button>
+                        <div class="calendar-tools">
+                            <button id="btnGenerarCalendario" class="btn btn-soft" type="button">Generar calendario</button>
+                            <button id="btnAnalizarCalendario" class="btn btn-soft" type="button">Sincronizar pagos esperados</button>
                         </div>
                     </section>
 
-                    <div class="input-row" style="margin-top: 10px;">
-                        <div class="input-group">
-                            <label for="taxes">Impuestos o cargos adicionales</label>
-                            <input type="number" id="taxes" step="0.01" value="0">
-                        </div>
-                        <div class="input-group">
-                            <label for="historialMaximo">Maximo historial visible</label>
-                            <input type="number" id="historialMaximo" min="5" max="20" step="1" value="10">
-                        </div>
-                    </div>
-
-                    <h3 class="section-subtitle">Personalizacion visual</h3>
-                    <div class="input-row">
-                        <div class="input-group">
-                            <label for="themePalette">Paleta de color</label>
-                            <select id="themePalette">
-                                <option value="bts-purple" selected>BTS Morado (predeterminado)</option>
-                                <option value="royal-violet">Royal Violeta</option>
-                                <option value="soft-lavender">Lavanda Suave</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="backgroundPreset">Fondo</label>
-                            <select id="backgroundPreset">
-                                <option value="bts-default" selected>Imagen BTS</option>
-                                <option value="purple-gradient">Gradiente Morado</option>
-                                <option value="night-violet">Noche Violeta</option>
-                                <option value="custom-upload">Subir mi imagen</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div id="customBackgroundWrap" class="custom-upload-wrap hidden">
-                        <div class="input-group">
-                            <label for="customBackgroundFile">Subir imagen de fondo</label>
-                            <input type="file" id="customBackgroundFile" accept="image/*">
-                        </div>
-                        <p class="small-note">Recomendado: imagen horizontal menor a 2 MB para mejor rendimiento.</p>
-                    </div>
-
-                    <div class="btn-row">
-                        <button id="btnCalcular" class="btn btn-primary" type="button">Calcular balance</button>
-                        <button id="btnLimpiar" class="btn btn-danger" type="button">Limpiar formulario</button>
+                    <div class="actions">
+                        <button id="btnReset" class="btn btn-danger" type="button">Reset formulario</button>
+                        <button id="btnSnapshot" class="btn btn-primary" type="button">Guardar snapshot</button>
                     </div>
                 </form>
 
-                <p class="hint">Atajo: <strong>Ctrl + Enter</strong> para calcular.</p>
+                <p class="foot-note">El calculo se actualiza en vivo al escribir. Se guarda borrador automaticamente en tu navegador.</p>
             </section>
 
-            <aside class="panel-right">
-                <section id="results" class="card results hidden" aria-live="polite">
-                    <h2>Resumen del prestamo</h2>
-                    <div class="result-grid">
-                        <div class="result-item">
-                            <div class="result-label">Acreedor</div>
-                            <div class="result-value small" id="resNombre">-</div>
+            <div class="right-stack">
+                <section class="panel results-panel">
+                    <div class="results-head">
+                        <h2>Panel en vivo</h2>
+                        <span class="live-pill">Auto update</span>
+                    </div>
+
+                    <div class="kpi-grid">
+                        <article class="kpi">
+                            <p class="kpi-label">Balance actual</p>
+                            <p id="kpiBalance" class="kpi-value big">$0.00</p>
+                            <button id="btnCopyBalance" type="button" class="copy-balance-btn" disabled>Copiar balance</button>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Total pagado</p>
+                            <p id="kpiPagado" class="kpi-value">$0.00</p>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Pagos realizados</p>
+                            <p id="kpiRealizados" class="kpi-value">0</p>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Pagos pendientes</p>
+                            <p id="kpiPendientes" class="kpi-value">0</p>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Proximo pago</p>
+                            <p id="kpiProximo" class="kpi-value">-</p>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Dias al proximo</p>
+                            <p id="kpiDias" class="kpi-value">-</p>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Acreedor</p>
+                            <p id="kpiAcreedor" class="kpi-value">-</p>
+                        </article>
+                        <article class="kpi">
+                            <p class="kpi-label">Contrato</p>
+                            <p id="kpiContrato" class="kpi-value">-</p>
+                        </article>
+                    </div>
+
+                    <div class="progress-wrap">
+                        <div class="progress-bar">
+                            <div id="progressBar" class="progress-fill"></div>
                         </div>
-                        <div class="result-item">
-                            <div class="result-label">Contrato</div>
-                            <div class="result-value small" id="resId">-</div>
-                        </div>
-                        <div class="result-item">
-                            <div class="result-label">Estado</div>
-                            <div class="result-value small" id="resStatus">-</div>
-                        </div>
-                        <div class="result-item highlight">
-                            <div class="result-label">Balance actual</div>
-                            <div class="result-value" id="resBalance">$0.00</div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" id="progressBar"></div>
-                            </div>
-                            <div class="result-label" style="margin-top: 6px;">
-                                <span id="porcentajePagado">0%</span> pagado
-                            </div>
-                        </div>
-                        <div class="result-item">
-                            <div class="result-label">Pagos realizados</div>
-                            <div class="result-value small" id="resPagosRealizados">0 pagos</div>
-                        </div>
-                        <div class="result-item">
-                            <div class="result-label">Total pagado</div>
-                            <div class="result-value small" id="resTotalPagado">$0.00</div>
-                        </div>
-                        <div class="result-item">
-                            <div class="result-label">Pagos restantes</div>
-                            <div class="result-value small" id="resPagosRestantes">0 pagos</div>
-                        </div>
-                        <div class="result-item">
-                            <div class="result-label">Proximo pago</div>
-                            <div class="result-value small" id="resProximoPago">-</div>
+                        <div class="progress-meta">
+                            <span id="progressLabel">0.0% cubierto</span>
+                            <span id="kpiModo">Modo: Frecuencia</span>
                         </div>
                     </div>
+
+                    <div id="statusBanner" class="status-banner">Completa los campos para iniciar el calculo live.</div>
                 </section>
 
-                <section id="calendarioResults" class="card hidden" aria-live="polite">
-                    <h2>Calendario de pagos</h2>
+                <section id="calendarPanel" class="panel hidden">
+                    <div class="section-head" style="margin-bottom: 8px;">
+                        <h3 class="section-title">Calendario de pagos</h3>
+                        <span class="mini-note" id="calendarMeta">-</span>
+                    </div>
                     <div class="table-wrap">
-                        <table class="schedule-table">
+                        <table>
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -753,106 +946,94 @@
                                     <th>Estado</th>
                                 </tr>
                             </thead>
-                            <tbody id="tablaCalendarioBody"></tbody>
+                            <tbody id="calendarBody"></tbody>
                         </table>
                     </div>
                 </section>
 
-                <section class="card history" aria-labelledby="historyHeading">
-                    <h2 id="historyHeading">Historial</h2>
-                    <div id="historialLista" class="history-list"></div>
-                    <div class="history-tools">
-                        <button id="btnLimpiarHistorial" class="btn btn-secondary" type="button">Limpiar historial</button>
+                <section class="panel history">
+                    <div class="history-head">
+                        <h3 class="section-title">Historial de snapshots</h3>
+                        <button id="btnClearHistory" class="btn btn-soft" type="button">Limpiar</button>
                     </div>
+                    <div id="historyList" class="history-list"></div>
                 </section>
-            </aside>
+            </div>
         </main>
     </div>
 
     <script>
-        const STORAGE_KEYS = {
-            history: "prestamoHistorial",
-            lastData: "prestamoLastData",
-            uiPrefs: "prestamoUiPrefs"
+        const STORAGE = {
+            draft: "loanStudioDraftV4",
+            history: "loanStudioHistoryV4",
+            ui: "loanStudioUiPrefsV4"
         };
 
-        const FIELD_IDS = [
-            "nombreAcreedor",
-            "idContrato",
-            "fechaAcuerdo",
-            "fechaActual",
-            "totalPagos",
-            "montoPago",
-            "frecuencia",
-            "pagosRealizadosManual",
-            "primeraFechaPago",
-            "numeroTotalPagos",
-            "frecuenciaCalendario",
-            "montoUltimoPago",
-            "calendarioPagos",
-            "taxes",
-            "historialMaximo",
-            "themePalette",
-            "backgroundPreset"
-        ];
-
-        const DEFAULT_BTS_BACKGROUND = "https://commons.wikimedia.org/wiki/Special:FilePath/BTS%20at%202017%20American%20Music%20Awards%20in%20Los%20Angeles,%2019%20November%202017%2001.jpg";
+        const DEFAULT_BTS_BACKGROUND = "";
+        const MAX_HISTORY_DEFAULT = 10;
 
         const THEME_PRESETS = {
             "bts-purple": {
-                "--bg-1": "#170a2e",
-                "--bg-2": "#34135c",
-                "--bg-3": "#5f2192",
+                "--bg-1": "#1a0a2e",
+                "--bg-2": "#2d1b4e",
+                "--bg-3": "#4a1d7a",
                 "--primary": "#7c3aed",
                 "--primary-2": "#a855f7",
-                "--line": "#dfd1f2",
-                "--muted": "#65527d",
-                "--results-1": "#432371",
-                "--results-2": "#6a11cb",
-                "--results-3": "#9d4edd"
+                "--line": "rgba(124, 58, 237, 0.15)",
+                "--ink-2": "#6b5b7a",
+                "--results-a": "#5b21b6",
+                "--results-b": "#7c3aed",
+                "--results-c": "#a855f7"
             },
             "royal-violet": {
-                "--bg-1": "#15092a",
-                "--bg-2": "#2f0e58",
-                "--bg-3": "#4a148c",
-                "--primary": "#8b5cf6",
-                "--primary-2": "#c084fc",
-                "--line": "#d7c5ee",
-                "--muted": "#5f4e78",
-                "--results-1": "#3b1f70",
-                "--results-2": "#5b21b6",
-                "--results-3": "#8b5cf6"
+                "--bg-1": "#1e1b4b",
+                "--bg-2": "#312e81",
+                "--bg-3": "#4338ca",
+                "--primary": "#6366f1",
+                "--primary-2": "#818cf8",
+                "--line": "rgba(99, 102, 241, 0.15)",
+                "--ink-2": "#6b7280",
+                "--results-a": "#4338ca",
+                "--results-b": "#6366f1",
+                "--results-c": "#818cf8"
             },
-            "soft-lavender": {
-                "--bg-1": "#21123d",
-                "--bg-2": "#4a216f",
-                "--bg-3": "#8255b0",
-                "--primary": "#7e22ce",
+            "lavender-shift": {
+                "--bg-1": "#2e1065",
+                "--bg-2": "#4c1d95",
+                "--bg-3": "#6b21a8",
+                "--primary": "#9333ea",
                 "--primary-2": "#c084fc",
-                "--line": "#e5d5fa",
-                "--muted": "#6f5d85",
-                "--results-1": "#5b2a86",
-                "--results-2": "#8b5cf6",
-                "--results-3": "#b07cf7"
+                "--line": "rgba(147, 51, 234, 0.15)",
+                "--ink-2": "#7c7c7c",
+                "--results-a": "#6b21a8",
+                "--results-b": "#9333ea",
+                "--results-c": "#c084fc"
             }
         };
 
         const BACKGROUND_PRESETS = {
             "bts-default": {
-                image: `url("${DEFAULT_BTS_BACKGROUND}")`,
-                overlay: "linear-gradient(125deg, rgba(24, 10, 44, 0.82), rgba(73, 23, 122, 0.74))",
-                gradient: "linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%)"
+                overlay: "none",
+                image: "none",
+                gradient: "linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%)"
             },
             "purple-gradient": {
+                overlay: "none",
                 image: "none",
-                overlay: "radial-gradient(circle at 12% 15%, rgba(255,255,255,0.15), transparent 40%), radial-gradient(circle at 86% 22%, rgba(255,255,255,0.1), transparent 44%)",
-                gradient: "linear-gradient(130deg, #1c0f32 0%, #4c1d95 58%, #7e22ce 100%)"
+                gradient: "linear-gradient(135deg, #1a0b2f 0%, #4c1d95 50%, #7e22ce 100%)"
             },
-            "night-violet": {
+            "galaxy-night": {
+                overlay: "none",
                 image: "none",
-                overlay: "radial-gradient(circle at 20% 25%, rgba(167,139,250,0.35), transparent 42%), radial-gradient(circle at 80% 18%, rgba(216,180,254,0.2), transparent 44%)",
-                gradient: "linear-gradient(130deg, #0f071f 0%, #2e1065 56%, #581c87 100%)"
+                gradient: "linear-gradient(135deg, #0c0420 0%, #2b0a57 50%, #4c1d95 100%)"
             }
+        };
+
+        const state = {
+            mode: "frecuencia",
+            customBackgroundData: "",
+            lastResult: null,
+            lastValidationErrors: []
         };
 
         const currency = new Intl.NumberFormat("es-ES", {
@@ -861,120 +1042,758 @@
             minimumFractionDigits: 2
         });
 
-        let tipoActual = "frecuencia";
-        let historial = [];
-        let customBackgroundData = "";
+        let recalcTimer = null;
+        let draftTimer = null;
 
         document.addEventListener("DOMContentLoaded", () => {
             bindEvents();
             applyDefaultValues();
-            loadLastData();
-            initVisualPreferences();
-            historial = normalizeHistory(safeReadJSON(STORAGE_KEYS.history, []));
+            loadDraft();
+            loadVisualPreferences();
             renderHistory();
-            setTipo(tipoActual, false);
+            setMode(state.mode, { save: false, recalc: false });
+            updateTopline();
+            queueRecalc(0);
         });
 
         function bindEvents() {
-            document.querySelectorAll("[data-tipo]").forEach((button) => {
-                button.addEventListener("click", () => setTipo(button.dataset.tipo));
+            document.querySelectorAll(".mode-btn").forEach((button) => {
+                button.addEventListener("click", () => setMode(button.dataset.mode));
             });
 
-            document.getElementById("btnCalcular").addEventListener("click", calcular);
-            document.getElementById("btnLimpiar").addEventListener("click", limpiarFormulario);
-            document.getElementById("btnGenerarCalendario").addEventListener("click", generarCalendarioAutomatico);
-            document.getElementById("btnAnalizarCalendario").addEventListener("click", analizarCalendario);
-            document.getElementById("btnLimpiarHistorial").addEventListener("click", limpiarHistorial);
-            document.getElementById("themePalette").addEventListener("change", applyVisualPreferences);
-            document.getElementById("backgroundPreset").addEventListener("change", applyVisualPreferences);
-            document.getElementById("customBackgroundFile").addEventListener("change", handleCustomBackgroundUpload);
+            document.getElementById("btnToggleCustomizer").addEventListener("click", toggleCustomizerPanel);
 
-            document.getElementById("historialLista").addEventListener("click", (event) => {
-                const loadBtn = event.target.closest("[data-history-load]");
-                if (loadBtn) {
-                    cargarDesdeHistorial(Number(loadBtn.dataset.historyLoad));
+            const form = document.getElementById("loanForm");
+            form.addEventListener("input", (event) => {
+                queueRecalc(130);
+                queueDraftSave();
+            });
+
+            form.addEventListener("change", () => {
+                queueRecalc(50);
+                queueDraftSave();
+            });
+
+            document.getElementById("themePalette").addEventListener("change", () => {
+                applyVisualPreferences();
+                queueDraftSave();
+                queueRecalc(60);
+            });
+
+            document.getElementById("backgroundPreset").addEventListener("change", () => {
+                applyVisualPreferences();
+                queueDraftSave();
+                queueRecalc(60);
+            });
+
+            document.getElementById("customBackgroundFile").addEventListener("change", handleCustomBackgroundUpload);
+            document.getElementById("btnGenerarCalendario").addEventListener("click", () => generateCalendarAuto(true));
+            document.getElementById("btnAnalizarCalendario").addEventListener("click", analyzeCalendarAgainstToday);
+            document.getElementById("btnReset").addEventListener("click", resetForm);
+            document.getElementById("btnSnapshot").addEventListener("click", saveSnapshotToHistory);
+            document.getElementById("btnClearHistory").addEventListener("click", clearHistory);
+            document.getElementById("btnCopyBalance").addEventListener("click", copyCurrentBalance);
+
+            document.getElementById("historyList").addEventListener("click", (event) => {
+                const loadButton = event.target.closest("[data-load-history]");
+                if (loadButton) {
+                    loadHistorySnapshot(Number(loadButton.dataset.loadHistory));
                     return;
                 }
-
-                const deleteBtn = event.target.closest("[data-history-delete]");
-                if (deleteBtn) {
-                    eliminarItemHistorial(Number(deleteBtn.dataset.historyDelete));
+                const deleteButton = event.target.closest("[data-delete-history]");
+                if (deleteButton) {
+                    deleteHistoryItem(Number(deleteButton.dataset.deleteHistory));
                 }
             });
 
             document.addEventListener("keydown", (event) => {
                 if (event.ctrlKey && event.key === "Enter") {
-                    calcular();
+                    saveSnapshotToHistory();
                 }
             });
         }
 
+        function toggleCustomizerPanel() {
+            const panel = document.getElementById("customizerPanel");
+            const button = document.getElementById("btnToggleCustomizer");
+            const willOpen = panel.classList.contains("hidden");
+            panel.classList.toggle("hidden", !willOpen);
+            button.setAttribute("aria-expanded", String(willOpen));
+        }
+
         function applyDefaultValues() {
-            const today = parseISODate(getTodayISO());
-            const fechaAcuerdo = addDays(today, -135);
-            const primeraFecha = addDays(today, -120);
+            const today = todayDate();
+            const agreementDate = addDays(today, -120);
+            const firstPayDate = addDays(today, -105);
 
             setValue("nombreAcreedor", "CreditNinja");
             setValue("idContrato", "8814712");
             setValue("fechaActual", formatISODate(today));
-            setValue("fechaAcuerdo", formatISODate(fechaAcuerdo));
+            setValue("fechaAcuerdo", formatISODate(agreementDate));
             setValue("totalPagos", "2554.14");
             setValue("montoPago", "134.44");
-            setValue("frecuencia", "14");
+            setValue("taxes", "0");
             setValue("pagosRealizadosManual", "");
-            setValue("primeraFechaPago", formatISODate(primeraFecha));
+            setValue("montoPagoInicial", "");
+            setValue("montoPagoFinal", "");
+            setValue("frecuencia", "14");
+            setValue("historialMaximo", String(MAX_HISTORY_DEFAULT));
+
+            setValue("primeraFechaPago", formatISODate(firstPayDate));
             setValue("numeroTotalPagos", "19");
             setValue("frecuenciaCalendario", "quincenal");
-            setValue("montoUltimoPago", "134.22");
-            setValue("taxes", "0");
-            setValue("historialMaximo", "10");
+
             setValue("themePalette", "bts-purple");
             setValue("backgroundPreset", "bts-default");
 
-            generarCalendarioEjemplo();
-            hideResults();
+            generateCalendarAuto(false);
+            state.mode = "frecuencia";
+            clearFeedback();
+            state.lastResult = null;
         }
 
-        function setTipo(tipo, save = true) {
-            tipoActual = tipo === "calendario" ? "calendario" : "frecuencia";
+        function updateTopline() {
+            document.getElementById("todayChip").textContent = "Hoy: " + formatDisplayDate(parseISODate(document.getElementById("fechaActual").value) || todayDate());
+            document.getElementById("modeChip").textContent = "Modo: " + (state.mode === "frecuencia" ? "Frecuencia" : "Calendario");
+        }
 
-            document.querySelectorAll("[data-tipo]").forEach((button) => {
-                const active = button.dataset.tipo === tipoActual;
+        function setMode(mode, options = {}) {
+            const save = options.save !== false;
+            const recalc = options.recalc !== false;
+            state.mode = mode === "calendario" ? "calendario" : "frecuencia";
+
+            document.querySelectorAll(".mode-btn").forEach((button) => {
+                const active = button.dataset.mode === state.mode;
                 button.classList.toggle("active", active);
                 button.setAttribute("aria-pressed", String(active));
             });
 
-            const modoFrecuencia = document.getElementById("modo-frecuencia");
-            const modoCalendario = document.getElementById("modo-calendario");
-
-            if (tipoActual === "frecuencia") {
-                modoFrecuencia.hidden = false;
-                modoCalendario.hidden = true;
-                document.getElementById("calendarioResults").classList.add("hidden");
-            } else {
-                modoFrecuencia.hidden = true;
-                modoCalendario.hidden = false;
+            document.getElementById("modeFrecuencia").classList.toggle("hidden", state.mode !== "frecuencia");
+            document.getElementById("modeCalendario").classList.toggle("hidden", state.mode !== "calendario");
+            if (state.mode !== "calendario") {
+                document.getElementById("calendarPanel").classList.add("hidden");
             }
 
+            updateTopline();
             if (save) {
-                saveLastData();
+                queueDraftSave();
+            }
+            if (recalc) {
+                queueRecalc(0);
             }
         }
 
-        function initVisualPreferences() {
-            const savedPrefs = safeReadJSON(STORAGE_KEYS.uiPrefs, {});
-            if (savedPrefs && typeof savedPrefs === "object") {
-                if (savedPrefs.themePalette) {
-                    setValue("themePalette", savedPrefs.themePalette);
-                }
-                if (savedPrefs.backgroundPreset) {
-                    setValue("backgroundPreset", savedPrefs.backgroundPreset);
-                }
-                if (savedPrefs.customBackground) {
-                    customBackgroundData = String(savedPrefs.customBackground);
+        function collectData() {
+            return {
+                mode: state.mode,
+                creditor: document.getElementById("nombreAcreedor").value.trim() || "No especificado",
+                contractId: document.getElementById("idContrato").value.trim() || "No especificado",
+                agreementDate: parseISODate(document.getElementById("fechaAcuerdo").value),
+                todayDate: parseISODate(document.getElementById("fechaActual").value),
+                totalContract: toNumber(document.getElementById("totalPagos").value),
+                installmentAmount: toNumber(document.getElementById("montoPago").value),
+                extraCharges: toNumber(document.getElementById("taxes").value, true),
+                manualPaidInstallments: toIntegerOrNull(document.getElementById("pagosRealizadosManual").value),
+                initialInstallmentAmount: toNumberOrNull(document.getElementById("montoPagoInicial").value),
+                finalInstallmentAmount: toNumberOrNull(document.getElementById("montoPagoFinal").value),
+                frequencyDays: toNumber(document.getElementById("frecuencia").value),
+                firstPaymentDate: parseISODate(document.getElementById("primeraFechaPago").value),
+                totalInstallmentsCalendar: toIntegerOrNull(document.getElementById("numeroTotalPagos").value),
+                calendarCadence: document.getElementById("frecuenciaCalendario").value,
+                calendarText: document.getElementById("calendarioPagos").value,
+                historyLimit: clamp(toIntegerOrNull(document.getElementById("historialMaximo").value) || MAX_HISTORY_DEFAULT, 5, 20)
+            };
+        }
+
+        function validateCore(data) {
+            const errors = [];
+
+            if (!data.agreementDate || !data.todayDate) {
+                errors.push("Debes definir fechas validas de acuerdo y fecha actual.");
+            }
+
+            if (!Number.isFinite(data.totalContract) || data.totalContract <= 0) {
+                errors.push("El monto total del contrato debe ser mayor a 0.");
+            }
+
+            if (!Number.isFinite(data.installmentAmount) || data.installmentAmount <= 0) {
+                errors.push("El monto por cuota debe ser mayor a 0.");
+            }
+
+            if (!Number.isFinite(data.extraCharges)) {
+                errors.push("Impuestos/cargos tiene un valor invalido.");
+            }
+
+            if (data.manualPaidInstallments !== null && data.manualPaidInstallments < 0) {
+                errors.push("Pagos manuales no puede ser negativo.");
+            }
+
+            if (data.initialInstallmentAmount !== null && data.initialInstallmentAmount < 0) {
+                errors.push("El pago inicial diferente no puede ser negativo.");
+            }
+
+            if (data.finalInstallmentAmount !== null && data.finalInstallmentAmount < 0) {
+                errors.push("El pago final diferente no puede ser negativo.");
+            }
+
+            if (data.mode === "frecuencia" && (!Number.isFinite(data.frequencyDays) || data.frequencyDays <= 0)) {
+                errors.push("Selecciona una frecuencia valida.");
+            }
+
+            if (data.mode === "calendario") {
+                const parsed = parseCalendarLines(data.calendarText);
+                if (!parsed.dates.length) {
+                    errors.push("En modo calendario necesitas al menos una fecha valida.");
                 }
             }
 
+            return errors;
+        }
+
+        function queueRecalc(delay = 120) {
+            clearTimeout(recalcTimer);
+            recalcTimer = setTimeout(runLiveCalculation, delay);
+        }
+
+        function queueDraftSave() {
+            clearTimeout(draftTimer);
+            draftTimer = setTimeout(saveDraft, 240);
+        }
+
+        function runLiveCalculation() {
+            const data = collectData();
+            updateTopline();
+            clearFeedback();
+
+            if (!hasMinimumData(data)) {
+                renderWaitingState();
+                state.lastResult = null;
+                return;
+            }
+
+            const errors = validateCore(data);
+            if (errors.length) {
+                state.lastValidationErrors = errors;
+                showFeedback(errors[0], "error");
+                renderWaitingState("Ajusta los datos para activar calculo en vivo.");
+                state.lastResult = null;
+                return;
+            }
+
+            let result;
+            if (data.mode === "frecuencia") {
+                result = calculateByFrequency(data);
+            } else {
+                result = calculateByCalendar(data);
+                if (result.invalidLines.length) {
+                    showFeedback("Se ignoraron lineas invalidas: " + result.invalidLines.slice(0, 3).join(", ") + (result.invalidLines.length > 3 ? "..." : ""), "error");
+                }
+            }
+
+            state.lastResult = result;
+            renderResults(data, result);
+            renderCalendarTable(result);
+            saveDraft();
+        }
+
+        function hasMinimumData(data) {
+            return Boolean(
+                data.agreementDate &&
+                data.todayDate &&
+                Number.isFinite(data.totalContract) && data.totalContract > 0 &&
+                Number.isFinite(data.installmentAmount) && data.installmentAmount > 0
+            );
+        }
+
+        function calculateByFrequency(data) {
+            const daysElapsed = Math.max(0, diffInDays(data.agreementDate, data.todayDate));
+            const expectedPaid = Math.floor(daysElapsed / data.frequencyDays);
+            const paidInstallments = data.manualPaidInstallments === null ? expectedPaid : Math.max(0, data.manualPaidInstallments);
+
+            const totalWithCharges = data.totalContract + data.extraCharges;
+            const estimatedInstallments = estimateInstallmentCount(
+                totalWithCharges,
+                data.installmentAmount,
+                data.initialInstallmentAmount,
+                data.finalInstallmentAmount
+            );
+            const paidAmount = calculatePaidAmountFromCount(
+                paidInstallments,
+                estimatedInstallments,
+                data.installmentAmount,
+                data.initialInstallmentAmount,
+                data.finalInstallmentAmount
+            );
+            const balance = Math.max(0, totalWithCharges - paidAmount);
+            const pendingInstallments = balance === 0 ? 0 : Math.max(0, estimatedInstallments - paidInstallments);
+            const paidPercent = totalWithCharges > 0 ? clamp((paidAmount / totalWithCharges) * 100, 0, 100) : 0;
+
+            const nextPaymentDate = balance === 0 ? null : addDays(data.agreementDate, (paidInstallments + 1) * data.frequencyDays);
+            const daysToNext = nextPaymentDate ? diffInDays(data.todayDate, nextPaymentDate) : null;
+            const overdue = data.manualPaidInstallments !== null ? data.manualPaidInstallments < expectedPaid : false;
+
+            return {
+                type: "frecuencia",
+                creditor: data.creditor,
+                contractId: data.contractId,
+                totalWithCharges,
+                paidAmount,
+                balance,
+                paidInstallments,
+                pendingInstallments,
+                paidPercent,
+                nextPaymentDate,
+                daysToNext,
+                overdue,
+                statusMessage: buildStatusMessage(balance, overdue, daysToNext, nextPaymentDate),
+                calendarRows: [],
+                invalidLines: []
+            };
+        }
+
+        function calculateByCalendar(data) {
+            const parsed = parseCalendarLines(data.calendarText);
+            const dates = parsed.dates;
+            const invalidLines = parsed.invalidLines;
+
+            const expectedPaid = dates.filter((d) => d.getTime() <= data.todayDate.getTime()).length;
+            let paidInstallments = data.manualPaidInstallments === null ? expectedPaid : data.manualPaidInstallments;
+            paidInstallments = clamp(paidInstallments, 0, dates.length);
+
+            const paidAmount = calculatePaidAmountFromCount(
+                paidInstallments,
+                dates.length,
+                data.installmentAmount,
+                data.initialInstallmentAmount,
+                data.finalInstallmentAmount
+            );
+
+            const totalWithCharges = data.totalContract + data.extraCharges;
+            const balance = Math.max(0, totalWithCharges - paidAmount);
+            const pendingInstallments = balance === 0 ? 0 : Math.ceil(balance / data.installmentAmount);
+            const paidPercent = totalWithCharges > 0 ? clamp((paidAmount / totalWithCharges) * 100, 0, 100) : 0;
+            const nextPaymentDate = paidInstallments < dates.length ? dates[paidInstallments] : null;
+            const daysToNext = nextPaymentDate ? diffInDays(data.todayDate, nextPaymentDate) : null;
+            const overdue = paidInstallments < expectedPaid;
+
+            const calendarRows = dates.map((date, index) => {
+                const amount = getInstallmentAmountByIndex(
+                    index,
+                    dates.length,
+                    data.installmentAmount,
+                    data.initialInstallmentAmount,
+                    data.finalInstallmentAmount
+                );
+                const isPaid = index < paidInstallments;
+                const isPast = date.getTime() < data.todayDate.getTime();
+                const isToday = date.getTime() === data.todayDate.getTime();
+
+                let status = "Pendiente";
+                let rowClass = "row-future";
+
+                if (isPaid) {
+                    status = "Pagado";
+                    rowClass = "row-paid";
+                } else if (isPast) {
+                    status = "Vencido";
+                    rowClass = "row-overdue";
+                } else if (isToday) {
+                    status = "Pago hoy";
+                    rowClass = "row-due";
+                }
+
+                return {
+                    index: index + 1,
+                    date,
+                    amount,
+                    status,
+                    rowClass
+                };
+            });
+
+            return {
+                type: "calendario",
+                creditor: data.creditor,
+                contractId: data.contractId,
+                totalWithCharges,
+                paidAmount,
+                balance,
+                paidInstallments,
+                pendingInstallments,
+                paidPercent,
+                nextPaymentDate,
+                daysToNext,
+                overdue,
+                statusMessage: buildStatusMessage(balance, overdue, daysToNext, nextPaymentDate),
+                calendarRows,
+                invalidLines
+            };
+        }
+
+        function buildStatusMessage(balance, overdue, daysToNext, nextPaymentDate) {
+            if (balance <= 0) {
+                return "Prestamo completado. No hay saldo pendiente.";
+            }
+            if (overdue) {
+                return "Detectado atraso respecto al plan esperado. Revisa pagos manuales o calendario.";
+            }
+            if (!nextPaymentDate) {
+                return "No se encontro proximo pago pendiente.";
+            }
+            if (daysToNext < 0) {
+                return "El proximo pago ya vencio hace " + Math.abs(daysToNext) + " dias.";
+            }
+            if (daysToNext === 0) {
+                return "Tu proximo pago es hoy.";
+            }
+            return "Siguiente pago en " + daysToNext + " dias.";
+        }
+
+        function renderResults(data, result) {
+            setText("kpiBalance", currency.format(result.balance));
+            setText("kpiPagado", currency.format(result.paidAmount));
+            setText("kpiRealizados", String(result.paidInstallments));
+            setText("kpiPendientes", String(result.pendingInstallments));
+            setText("kpiProximo", result.nextPaymentDate ? formatDisplayDate(result.nextPaymentDate) : "Completado");
+            setText("kpiDias", result.nextPaymentDate ? String(result.daysToNext) : "-");
+            setText("kpiAcreedor", result.creditor);
+            setText("kpiContrato", result.contractId);
+            setText("progressLabel", result.paidPercent.toFixed(1) + "% cubierto");
+            setText("kpiModo", "Modo: " + (result.type === "frecuencia" ? "Frecuencia" : "Calendario"));
+
+            document.getElementById("progressBar").style.width = result.paidPercent.toFixed(2) + "%";
+
+            const banner = document.getElementById("statusBanner");
+            banner.textContent = result.statusMessage;
+            banner.className = "status-banner";
+            if (result.balance <= 0) {
+                banner.classList.add("ok");
+            } else if (result.overdue) {
+                banner.classList.add("danger");
+            } else {
+                banner.classList.add("warn");
+            }
+
+            document.getElementById("btnCopyBalance").disabled = false;
+        }
+
+        function renderWaitingState(message = "Completa los campos para iniciar el calculo live.") {
+            setText("kpiBalance", "$0.00");
+            setText("kpiPagado", "$0.00");
+            setText("kpiRealizados", "0");
+            setText("kpiPendientes", "0");
+            setText("kpiProximo", "-");
+            setText("kpiDias", "-");
+            setText("kpiAcreedor", "-");
+            setText("kpiContrato", "-");
+            setText("progressLabel", "0.0% cubierto");
+            setText("kpiModo", "Modo: " + (state.mode === "frecuencia" ? "Frecuencia" : "Calendario"));
+            document.getElementById("progressBar").style.width = "0%";
+
+            const banner = document.getElementById("statusBanner");
+            banner.textContent = message;
+            banner.className = "status-banner";
+            document.getElementById("calendarPanel").classList.add("hidden");
+            setText("calendarMeta", "-");
+            document.getElementById("calendarBody").innerHTML = "";
+            document.getElementById("btnCopyBalance").disabled = true;
+        }
+
+        function renderCalendarTable(result) {
+            if (state.mode !== "calendario") {
+                document.getElementById("calendarPanel").classList.add("hidden");
+                return;
+            }
+
+            const panel = document.getElementById("calendarPanel");
+            const body = document.getElementById("calendarBody");
+            body.innerHTML = "";
+
+            if (!result.calendarRows.length) {
+                panel.classList.add("hidden");
+                setText("calendarMeta", "Sin fechas validas");
+                return;
+            }
+
+            result.calendarRows.forEach((row) => {
+                const tr = document.createElement("tr");
+                tr.className = row.rowClass;
+                tr.innerHTML = [
+                    "<td>" + row.index + "</td>",
+                    "<td>" + formatDisplayDate(row.date) + "</td>",
+                    "<td>" + currency.format(row.amount) + "</td>",
+                    "<td>" + row.status + "</td>"
+                ].join("");
+                body.appendChild(tr);
+            });
+
+            setText("calendarMeta", result.calendarRows.length + " pagos en calendario");
+            panel.classList.remove("hidden");
+        }
+
+        function generateCalendarAuto(showFeedbackMessage) {
+            const firstDate = parseISODate(document.getElementById("primeraFechaPago").value);
+            const totalPayments = toIntegerOrNull(document.getElementById("numeroTotalPagos").value) || 19;
+            const cadence = getCalendarCadenceModel(document.getElementById("frecuenciaCalendario").value);
+
+            if (!firstDate) {
+                if (showFeedbackMessage) {
+                    showFeedback("Primero define una primera fecha de pago valida.", "error");
+                }
+                return;
+            }
+
+            const dates = [];
+            for (let i = 0; i < totalPayments; i += 1) {
+                dates.push(formatISODate(cadence.nextDate(firstDate, i)));
+            }
+
+            setValue("calendarioPagos", dates.join("\n"));
+
+            if (!document.getElementById("fechaAcuerdo").value) {
+                setValue("fechaAcuerdo", formatISODate(addDays(firstDate, -(cadence.approxDays + 2))));
+            }
+
+            if (showFeedbackMessage) {
+                showFeedback("Calendario generado: " + totalPayments + " pagos " + cadence.label + ".", "success");
+            }
+
+            queueRecalc(0);
+        }
+
+        function analyzeCalendarAgainstToday() {
+            const today = parseISODate(document.getElementById("fechaActual").value);
+            if (!today) {
+                showFeedback("Define una fecha actual valida para analizar el calendario.", "error");
+                return;
+            }
+
+            const parsed = parseCalendarLines(document.getElementById("calendarioPagos").value);
+            if (!parsed.dates.length) {
+                showFeedback("No hay fechas validas para analizar.", "error");
+                return;
+            }
+
+            const expectedPaid = parsed.dates.filter((d) => d.getTime() <= today.getTime()).length;
+            setValue("pagosRealizadosManual", String(expectedPaid));
+            showFeedback("Pagos manuales sincronizados a " + expectedPaid + " segun fecha actual.", "success");
+            queueRecalc(0);
+        }
+
+        function saveSnapshotToHistory() {
+            if (!state.lastResult) {
+                queueRecalc(0);
+                if (!state.lastResult) {
+                    showFeedback("No hay calculo valido para guardar en historial.", "error");
+                    return;
+                }
+            }
+
+            const history = readJSON(STORAGE.history, []);
+            const data = collectData();
+            const snapshot = collectSnapshot();
+
+            history.unshift({
+                at: new Date().toLocaleString("es-ES"),
+                mode: state.mode,
+                creditor: data.creditor,
+                contractId: data.contractId,
+                balance: state.lastResult.balance,
+                paidInstallments: state.lastResult.paidInstallments,
+                snapshot
+            });
+
+            const max = data.historyLimit || MAX_HISTORY_DEFAULT;
+            const nextHistory = history.slice(0, max);
+            writeJSON(STORAGE.history, nextHistory);
+            renderHistory();
+            showFeedback("Snapshot guardado en historial.", "success");
+        }
+
+        async function copyCurrentBalance() {
+            if (!state.lastResult) {
+                showFeedback("No hay balance calculado para copiar.", "error");
+                return;
+            }
+
+            const balanceText = document.getElementById("kpiBalance").textContent.trim();
+            if (!balanceText) {
+                showFeedback("No se pudo obtener el balance para copiar.", "error");
+                return;
+            }
+
+            try {
+                if (navigator.clipboard && window.isSecureContext) {
+                    await navigator.clipboard.writeText(balanceText);
+                } else {
+                    const helper = document.createElement("textarea");
+                    helper.value = balanceText;
+                    helper.setAttribute("readonly", "");
+                    helper.style.position = "fixed";
+                    helper.style.left = "-9999px";
+                    document.body.appendChild(helper);
+                    helper.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(helper);
+                }
+                showFeedback("Balance copiado: " + balanceText, "success");
+            } catch (_error) {
+                showFeedback("No se pudo copiar al portapapeles.", "error");
+            }
+        }
+
+        function renderHistory() {
+            const container = document.getElementById("historyList");
+            const history = readJSON(STORAGE.history, []);
+
+            if (!history.length) {
+                container.innerHTML = '<p class="history-empty">No hay snapshots guardados.</p>';
+                return;
+            }
+
+            container.innerHTML = history.map((item, index) => {
+                return [
+                    '<article class="history-item">',
+                    '<p class="history-title">' + escapeHtml(item.creditor || "Sin acreedor") + ' - ' + escapeHtml(item.contractId || "Sin ID") + '</p>',
+                    '<p class="history-meta">Balance: ' + currency.format(Number(item.balance || 0)) + ' | Pagos: ' + Number(item.paidInstallments || 0) + ' | ' + escapeHtml(item.mode || '-') + ' | ' + escapeHtml(item.at || '-') + '</p>',
+                    '<div class="history-actions">',
+                    '<button class="btn btn-soft" type="button" data-load-history="' + index + '">Cargar</button>',
+                    '<button class="btn btn-danger" type="button" data-delete-history="' + index + '">Borrar</button>',
+                    '</div>',
+                    '</article>'
+                ].join("");
+            }).join("");
+        }
+
+        function loadHistorySnapshot(index) {
+            const history = readJSON(STORAGE.history, []);
+            const item = history[index];
+            if (!item || !item.snapshot) {
+                showFeedback("No se pudo cargar el snapshot seleccionado.", "error");
+                return;
+            }
+
+            restoreSnapshot(item.snapshot);
+            setMode(item.snapshot.mode || "frecuencia", { save: true, recalc: true });
+            showFeedback("Snapshot cargado.", "success");
+        }
+
+        function deleteHistoryItem(index) {
+            const history = readJSON(STORAGE.history, []);
+            if (!Number.isInteger(index) || index < 0 || index >= history.length) {
+                return;
+            }
+            history.splice(index, 1);
+            writeJSON(STORAGE.history, history);
+            renderHistory();
+        }
+
+        function clearHistory() {
+            const history = readJSON(STORAGE.history, []);
+            if (!history.length) {
+                return;
+            }
+
+            if (!window.confirm("Se eliminara todo el historial. Continuar?")) {
+                return;
+            }
+
+            writeJSON(STORAGE.history, []);
+            renderHistory();
+        }
+
+        function collectSnapshot() {
+            const snapshot = {
+                mode: state.mode,
+                customBackgroundData: state.customBackgroundData
+            };
+
+            [
+                "nombreAcreedor",
+                "idContrato",
+                "fechaAcuerdo",
+                "fechaActual",
+                "totalPagos",
+                "montoPago",
+                "taxes",
+                "pagosRealizadosManual",
+                "montoPagoInicial",
+                "montoPagoFinal",
+                "frecuencia",
+                "historialMaximo",
+                "primeraFechaPago",
+                "numeroTotalPagos",
+                "frecuenciaCalendario",
+                "calendarioPagos",
+                "themePalette",
+                "backgroundPreset"
+            ].forEach((id) => {
+                const element = document.getElementById(id);
+                if (element) {
+                    snapshot[id] = element.value;
+                }
+            });
+
+            return snapshot;
+        }
+
+        function restoreSnapshot(snapshot) {
+            Object.keys(snapshot).forEach((key) => {
+                const element = document.getElementById(key);
+                if (element) {
+                    element.value = String(snapshot[key] ?? "");
+                }
+            });
+
+            if (snapshot.customBackgroundData) {
+                state.customBackgroundData = String(snapshot.customBackgroundData);
+            }
+
+            applyVisualPreferences(false);
+        }
+
+        function saveDraft() {
+            const snapshot = collectSnapshot();
+            writeJSON(STORAGE.draft, snapshot);
+            saveVisualPreferences();
+        }
+
+        function loadDraft() {
+            const draft = readJSON(STORAGE.draft, null);
+            if (!draft || typeof draft !== "object") {
+                return;
+            }
+
+            restoreSnapshot(draft);
+            setMode(draft.mode || "frecuencia", { save: false, recalc: false });
+        }
+
+        function resetForm() {
+            if (!window.confirm("Se reiniciaran los datos del formulario. Deseas continuar?")) {
+                return;
+            }
+
+            writeJSON(STORAGE.draft, null);
+            state.customBackgroundData = "";
+            applyDefaultValues();
+            setMode("frecuencia", { save: true, recalc: true });
+            applyVisualPreferences();
+            showFeedback("Formulario restablecido.", "success");
+        }
+
+        function loadVisualPreferences() {
+            const prefs = readJSON(STORAGE.ui, {});
+            if (prefs && typeof prefs === "object") {
+                if (prefs.themePalette) {
+                    setValue("themePalette", prefs.themePalette);
+                }
+                if (prefs.backgroundPreset) {
+                    setValue("backgroundPreset", prefs.backgroundPreset);
+                }
+                if (prefs.customBackgroundData) {
+                    state.customBackgroundData = String(prefs.customBackgroundData);
+                }
+            }
             applyVisualPreferences(false);
         }
 
@@ -983,37 +1802,37 @@
             const background = document.getElementById("backgroundPreset").value || "bts-default";
             const root = document.documentElement;
             const body = document.body;
-            const themePreset = THEME_PRESETS[theme] || THEME_PRESETS["bts-purple"];
-            const backgroundWrap = document.getElementById("customBackgroundWrap");
 
-            Object.entries(themePreset).forEach(([cssVar, cssValue]) => {
-                root.style.setProperty(cssVar, cssValue);
+            const themePreset = THEME_PRESETS[theme] || THEME_PRESETS["bts-purple"];
+            Object.entries(themePreset).forEach(([token, value]) => {
+                root.style.setProperty(token, value);
             });
 
+            const uploadWrap = document.getElementById("customBackgroundWrap");
             if (background === "custom-upload") {
-                backgroundWrap.classList.remove("hidden");
-                if (customBackgroundData) {
-                    body.style.setProperty("--bg-image", `url("${customBackgroundData}")`);
-                    body.style.setProperty("--bg-overlay", "linear-gradient(125deg, rgba(24, 10, 44, 0.66), rgba(73, 23, 122, 0.55))");
-                    body.style.setProperty("--bg-gradient", "linear-gradient(130deg, var(--bg-1) 0%, var(--bg-2) 58%, var(--bg-3) 100%)");
+                uploadWrap.classList.remove("hidden");
+                if (state.customBackgroundData) {
+                    body.style.background = `linear-gradient(135deg, rgba(26, 10, 46, 0.85), rgba(45, 27, 78, 0.85)), url("${state.customBackgroundData}") center/cover no-repeat`;
                 } else {
-                    const fallback = BACKGROUND_PRESETS["purple-gradient"];
-                    body.style.setProperty("--bg-image", fallback.image);
-                    body.style.setProperty("--bg-overlay", fallback.overlay);
-                    body.style.setProperty("--bg-gradient", fallback.gradient);
+                    body.style.background = BACKGROUND_PRESETS["purple-gradient"].gradient;
                 }
             } else {
-                backgroundWrap.classList.add("hidden");
-                const preset = BACKGROUND_PRESETS[background] || BACKGROUND_PRESETS["bts-default"];
-                body.style.setProperty("--bg-image", preset.image);
-                body.style.setProperty("--bg-overlay", preset.overlay);
-                body.style.setProperty("--bg-gradient", preset.gradient);
+                uploadWrap.classList.add("hidden");
+                const bgPreset = BACKGROUND_PRESETS[background] || BACKGROUND_PRESETS["bts-default"];
+                body.style.background = bgPreset.gradient;
             }
 
             if (save) {
                 saveVisualPreferences();
-                saveLastData();
             }
+        }
+
+        function saveVisualPreferences() {
+            writeJSON(STORAGE.ui, {
+                themePalette: document.getElementById("themePalette").value || "bts-purple",
+                backgroundPreset: document.getElementById("backgroundPreset").value || "bts-default",
+                customBackgroundData: state.customBackgroundData || ""
+            });
         }
 
         function handleCustomBackgroundUpload(event) {
@@ -1022,18 +1841,24 @@
                 return;
             }
 
+            if (!file.type.startsWith("image/")) {
+                showFeedback("El archivo no es una imagen valida.", "error");
+                event.target.value = "";
+                return;
+            }
+
             if (file.size > 2 * 1024 * 1024) {
-                showFeedback("La imagen excede 2 MB. Usa una imagen mas liviana.", "error");
+                showFeedback("La imagen supera 2MB. Usa una mas liviana.", "error");
                 event.target.value = "";
                 return;
             }
 
             const reader = new FileReader();
             reader.onload = () => {
-                customBackgroundData = String(reader.result || "");
+                state.customBackgroundData = String(reader.result || "");
                 setValue("backgroundPreset", "custom-upload");
                 applyVisualPreferences();
-                showFeedback("Fondo personalizado aplicado correctamente.", "success");
+                showFeedback("Fondo personalizado aplicado.", "success");
             };
             reader.onerror = () => {
                 showFeedback("No se pudo leer la imagen seleccionada.", "error");
@@ -1041,541 +1866,211 @@
             reader.readAsDataURL(file);
         }
 
-        function saveVisualPreferences() {
-            safeWriteJSON(STORAGE_KEYS.uiPrefs, {
-                themePalette: document.getElementById("themePalette").value || "bts-purple",
-                backgroundPreset: document.getElementById("backgroundPreset").value || "bts-default",
-                customBackground: customBackgroundData || ""
-            });
-        }
-
-        function calcular() {
-            clearFeedback();
-
-            const data = collectFormData();
-            if (!data) {
-                return;
-            }
-
-            const resultado = tipoActual === "frecuencia"
-                ? calcularPorFrecuencia(data)
-                : calcularPorCalendario(data);
-
-            if (!resultado) {
-                return;
-            }
-
-            renderResults(data, resultado);
-            saveLastData();
-            guardarEnHistorial(data, resultado);
-        }
-
-        function collectFormData() {
-            const nombre = document.getElementById("nombreAcreedor").value.trim() || "No especificado";
-            const idContrato = document.getElementById("idContrato").value.trim() || "No especificado";
-            const fechaAcuerdo = parseISODate(document.getElementById("fechaAcuerdo").value);
-            const fechaActual = parseISODate(document.getElementById("fechaActual").value);
-            const totalPagos = parseInputNumber("totalPagos");
-            const montoPago = parseInputNumber("montoPago");
-            const taxesRaw = document.getElementById("taxes").value.trim();
-            const taxes = taxesRaw === "" ? 0 : parseInputNumber("taxes");
-            const pagosManualRaw = document.getElementById("pagosRealizadosManual").value.trim();
-            const pagosManual = pagosManualRaw === "" ? null : Number(pagosManualRaw);
-            const frecuencia = Number(document.getElementById("frecuencia").value);
-            const montoUltimoRaw = document.getElementById("montoUltimoPago").value.trim();
-            const montoUltimo = montoUltimoRaw === "" ? null : Number(montoUltimoRaw);
-            const historialMaximo = Number(document.getElementById("historialMaximo").value || "10");
-
-            if (!fechaAcuerdo || !fechaActual) {
-                showFeedback("Ingresa fechas validas para acuerdo y fecha actual.");
-                return null;
-            }
-
-            if (!Number.isFinite(totalPagos) || totalPagos <= 0) {
-                showFeedback("El monto total del contrato debe ser mayor que cero.");
-                return null;
-            }
-
-            if (!Number.isFinite(montoPago) || montoPago <= 0) {
-                showFeedback("El monto por cuota debe ser mayor que cero.");
-                return null;
-            }
-
-            if (!Number.isFinite(taxes)) {
-                showFeedback("Impuestos/cargos contiene un valor invalido.");
-                return null;
-            }
-
-            if (totalPagos + taxes <= 0) {
-                showFeedback("La suma de total + impuestos/cargos debe ser mayor que cero.");
-                return null;
-            }
-
-            if (pagosManual !== null && (!Number.isFinite(pagosManual) || pagosManual < 0 || !Number.isInteger(pagosManual))) {
-                showFeedback("Pagos realizados manuales debe ser un entero mayor o igual a cero.");
-                return null;
-            }
-
-            if (!Number.isFinite(frecuencia) || frecuencia <= 0) {
-                showFeedback("Selecciona una frecuencia de pago valida.");
-                return null;
-            }
-
-            if (montoUltimo !== null && (!Number.isFinite(montoUltimo) || montoUltimo < 0)) {
-                showFeedback("Monto del ultimo pago invalido.");
-                return null;
-            }
-
-            return {
-                nombre,
-                idContrato,
-                fechaAcuerdo,
-                fechaActual,
-                totalPagos,
-                montoPago,
-                taxes,
-                pagosManual,
-                frecuencia,
-                montoUltimo,
-                historialMaximo: clamp(historialMaximo, 5, 20)
-            };
-        }
-
-        function calcularPorFrecuencia(data) {
-            const diasTranscurridos = diffInDays(data.fechaAcuerdo, data.fechaActual);
-            let pagosRealizados = data.pagosManual;
-            if (pagosRealizados === null) {
-                pagosRealizados = diasTranscurridos < data.frecuencia ? 0 : Math.floor(diasTranscurridos / data.frecuencia);
-            }
-
-            pagosRealizados = Math.max(0, pagosRealizados);
-            const totalConCargos = data.totalPagos + data.taxes;
-            const totalPagado = pagosRealizados * data.montoPago;
-            const balance = Math.max(0, totalConCargos - totalPagado);
-            const pagosRestantes = balance === 0 ? 0 : Math.ceil(balance / data.montoPago);
-            const porcentajePagado = totalConCargos > 0 ? Math.min((totalPagado / totalConCargos) * 100, 100) : 0;
-            const proximoPagoDate = balance === 0
-                ? null
-                : addDays(data.fechaAcuerdo, (pagosRealizados + 1) * data.frecuencia);
-
-            return {
-                tipo: "frecuencia",
-                totalConCargos,
-                totalPagado,
-                balance,
-                pagosRealizados,
-                pagosRestantes,
-                porcentajePagado,
-                proximoPagoDate,
-                vencido: false,
-                calendario: []
-            };
-        }
-
-        function calcularPorCalendario(data) {
-            const fechas = parseCalendarLines(document.getElementById("calendarioPagos").value);
-            if (!fechas.length) {
-                showFeedback("Debes ingresar al menos una fecha de pago en el calendario.");
-                return null;
-            }
-
-            let pagosEsperadosHastaHoy = 0;
-            fechas.forEach((fecha) => {
-                if (fecha.getTime() <= data.fechaActual.getTime()) {
-                    pagosEsperadosHastaHoy += 1;
-                }
-            });
-
-            let pagosRealizados = data.pagosManual === null ? pagosEsperadosHastaHoy : data.pagosManual;
-            pagosRealizados = clamp(pagosRealizados, 0, fechas.length);
-
-            const montoUltimo = data.montoUltimo === null ? data.montoPago : data.montoUltimo;
-            const regularPaid = Math.min(pagosRealizados, Math.max(fechas.length - 1, 0));
-            const ultimoPagoPagado = pagosRealizados >= fechas.length ? 1 : 0;
-            const totalPagado = (regularPaid * data.montoPago) + (ultimoPagoPagado * montoUltimo);
-            const totalConCargos = data.totalPagos + data.taxes;
-            const balance = Math.max(0, totalConCargos - totalPagado);
-            const pagosRestantes = balance === 0 ? 0 : Math.ceil(balance / data.montoPago);
-            const porcentajePagado = totalConCargos > 0 ? Math.min((totalPagado / totalConCargos) * 100, 100) : 0;
-            const proximoPagoDate = pagosRealizados < fechas.length ? fechas[pagosRealizados] : null;
-            const vencido = data.pagosManual !== null && data.pagosManual < pagosEsperadosHastaHoy;
-
-            const calendario = fechas.map((fecha, index) => {
-                const esUltimo = index === fechas.length - 1;
-                const monto = esUltimo ? montoUltimo : data.montoPago;
-                const isPaid = index < pagosRealizados;
-                const isPast = fecha.getTime() < data.fechaActual.getTime();
-                const isToday = fecha.getTime() === data.fechaActual.getTime();
-
-                let estado = "Pendiente";
-                let clase = "row-future";
-
-                if (isPaid) {
-                    estado = "Pagado";
-                    clase = "row-paid";
-                } else if (isPast) {
-                    estado = "Vencido";
-                    clase = "row-overdue";
-                } else if (isToday) {
-                    estado = "Pago hoy";
-                    clase = "row-due";
-                }
-
+        function getCalendarCadenceModel(value) {
+            if (value === "semanal") {
                 return {
-                    index: index + 1,
-                    fecha,
-                    monto,
-                    estado,
-                    clase
+                    label: "semanales",
+                    approxDays: 7,
+                    nextDate: (start, index) => addDays(start, index * 7)
                 };
-            });
-
+            }
+            if (value === "mensual") {
+                return {
+                    label: "mensuales",
+                    approxDays: 30,
+                    nextDate: (start, index) => addMonthsSafe(start, index)
+                };
+            }
             return {
-                tipo: "calendario",
-                totalConCargos,
-                totalPagado,
-                balance,
-                pagosRealizados,
-                pagosRestantes,
-                porcentajePagado,
-                proximoPagoDate,
-                vencido,
-                calendario
+                label: "quincenales",
+                approxDays: 14,
+                nextDate: (start, index) => addDays(start, index * 14)
             };
         }
 
-        function renderResults(data, result) {
-            document.getElementById("resNombre").textContent = data.nombre;
-            document.getElementById("resId").textContent = data.idContrato;
-            document.getElementById("resBalance").textContent = currency.format(result.balance);
-            document.getElementById("resPagosRealizados").textContent = result.pagosRealizados + " pagos";
-            document.getElementById("resTotalPagado").textContent = currency.format(result.totalPagado);
-            document.getElementById("resPagosRestantes").textContent = result.pagosRestantes + " pagos";
-            document.getElementById("porcentajePagado").textContent = result.porcentajePagado.toFixed(1) + "%";
-            document.getElementById("progressBar").style.width = result.porcentajePagado.toFixed(1) + "%";
-
-            const proximoPagoText = result.proximoPagoDate
-                ? formatDisplayDate(result.proximoPagoDate)
-                : "Prestamo completado";
-            document.getElementById("resProximoPago").textContent = proximoPagoText;
-
-            const statusElement = document.getElementById("resStatus");
-            if (result.balance === 0) {
-                statusElement.innerHTML = '<span class="status-pill status-done">Completado</span>';
-            } else if (result.tipo === "calendario" && result.vencido) {
-                statusElement.innerHTML = '<span class="status-pill status-late">Pago vencido</span>';
-            } else {
-                statusElement.innerHTML = '<span class="status-pill status-ok">Al dia</span>';
+        function getInstallmentAmountByIndex(index, totalInstallments, regularAmount, initialAmount, finalAmount) {
+            if (totalInstallments <= 0) {
+                return regularAmount;
             }
 
-            document.getElementById("results").classList.remove("hidden");
-
-            if (result.tipo === "calendario") {
-                renderCalendarTable(result.calendario);
-            } else {
-                document.getElementById("calendarioResults").classList.add("hidden");
+            if (totalInstallments === 1) {
+                if (initialAmount !== null) {
+                    return initialAmount;
+                }
+                if (finalAmount !== null) {
+                    return finalAmount;
+                }
+                return regularAmount;
             }
+
+            if (index === 0 && initialAmount !== null) {
+                return initialAmount;
+            }
+
+            if (index === totalInstallments - 1 && finalAmount !== null) {
+                return finalAmount;
+            }
+
+            return regularAmount;
         }
 
-        function renderCalendarTable(rows) {
-            const body = document.getElementById("tablaCalendarioBody");
-            body.innerHTML = "";
+        function plannedTotalForInstallments(totalInstallments, regularAmount, initialAmount, finalAmount) {
+            if (totalInstallments <= 0) {
+                return 0;
+            }
 
-            rows.forEach((row) => {
-                const tr = document.createElement("tr");
-                tr.className = row.clase;
-                tr.innerHTML = [
-                    "<td>" + row.index + "</td>",
-                    "<td>" + formatDisplayDate(row.fecha) + "</td>",
-                    "<td>" + currency.format(row.monto) + "</td>",
-                    "<td>" + row.estado + "</td>"
-                ].join("");
-                body.appendChild(tr);
-            });
+            if (totalInstallments === 1) {
+                return getInstallmentAmountByIndex(0, 1, regularAmount, initialAmount, finalAmount);
+            }
 
-            document.getElementById("calendarioResults").classList.remove("hidden");
+            const first = getInstallmentAmountByIndex(0, totalInstallments, regularAmount, initialAmount, finalAmount);
+            const last = getInstallmentAmountByIndex(totalInstallments - 1, totalInstallments, regularAmount, initialAmount, finalAmount);
+            const middleCount = Math.max(0, totalInstallments - 2);
+            return first + (middleCount * regularAmount) + last;
         }
 
-        function analizarCalendario() {
-            clearFeedback();
-
-            const fechaActual = parseISODate(document.getElementById("fechaActual").value);
-            if (!fechaActual) {
-                showFeedback("Ingresa una fecha actual valida para analizar el calendario.");
-                return;
+        function estimateInstallmentCount(totalTarget, regularAmount, initialAmount, finalAmount) {
+            if (!Number.isFinite(totalTarget) || totalTarget <= 0) {
+                return 1;
+            }
+            if (!Number.isFinite(regularAmount) || regularAmount <= 0) {
+                return 1;
             }
 
-            const fechas = parseCalendarLines(document.getElementById("calendarioPagos").value);
-            if (!fechas.length) {
-                showFeedback("No hay fechas validas para analizar.");
-                return;
-            }
-
-            let pagosEsperados = 0;
-            let proximoPago = null;
-
-            for (let i = 0; i < fechas.length; i += 1) {
-                if (fechas[i].getTime() <= fechaActual.getTime()) {
-                    pagosEsperados += 1;
-                } else if (!proximoPago) {
-                    proximoPago = fechas[i];
+            for (let count = 1; count <= 2000; count += 1) {
+                if (plannedTotalForInstallments(count, regularAmount, initialAmount, finalAmount) >= totalTarget - 0.0001) {
+                    return count;
                 }
             }
 
-            document.getElementById("pagosRealizadosManual").value = String(pagosEsperados);
-            showFeedback(
-                "Analisis completado: " +
-                pagosEsperados + " pagos esperados hasta " + formatDisplayDate(fechaActual) +
-                ". Proximo pago: " + (proximoPago ? formatDisplayDate(proximoPago) : "no hay"),
-                "success"
-            );
+            return Math.max(1, Math.ceil(totalTarget / regularAmount));
         }
 
-        function generarCalendarioAutomatico() {
-            clearFeedback();
-
-            const primeraFecha = parseISODate(document.getElementById("primeraFechaPago").value);
-            const numeroPagos = Number(document.getElementById("numeroTotalPagos").value);
-            const frecuenciaConfig = getCalendarFrequencyConfig();
-
-            if (!primeraFecha) {
-                showFeedback("Ingresa una primera fecha valida para generar el calendario.");
-                return;
+        function calculatePaidAmountFromCount(paidCount, totalInstallments, regularAmount, initialAmount, finalAmount) {
+            const paid = Math.max(0, paidCount || 0);
+            const total = Math.max(1, totalInstallments || 1);
+            if (paid === 0) {
+                return 0;
             }
 
-            if (!Number.isFinite(numeroPagos) || numeroPagos <= 0 || !Number.isInteger(numeroPagos)) {
-                showFeedback("Numero total de pagos invalido.");
-                return;
-            }
-
-            const fechas = [];
-            for (let i = 0; i < numeroPagos; i += 1) {
-                fechas.push(formatISODate(frecuenciaConfig.getDateAt(primeraFecha, i)));
-            }
-
-            document.getElementById("calendarioPagos").value = fechas.join("\n");
-
-            if (!document.getElementById("fechaAcuerdo").value) {
-                document.getElementById("fechaAcuerdo").value = formatISODate(addDays(primeraFecha, -(frecuenciaConfig.days + 2)));
-            }
-
-            showFeedback("Calendario generado con " + numeroPagos + " pagos " + frecuenciaConfig.label + ".", "success");
-        }
-
-        function limpiarFormulario() {
-            const ok = window.confirm("Se limpiara el formulario y los resultados. Deseas continuar?");
-            if (!ok) {
-                return;
-            }
-
-            applyDefaultValues();
-            setTipo("frecuencia", false);
-            safeRemove(STORAGE_KEYS.lastData);
-            safeRemove(STORAGE_KEYS.uiPrefs);
-            customBackgroundData = "";
-            applyVisualPreferences(false);
-            showFeedback("Formulario restablecido.", "success");
-        }
-
-        function guardarEnHistorial(data, result) {
-            const maximo = data.historialMaximo;
-            const snapshot = collectSnapshot();
-
-            historial.unshift({
-                fecha: new Date().toLocaleString("es-ES"),
-                tipo: tipoActual,
-                nombre: data.nombre,
-                id: data.idContrato,
-                balance: result.balance,
-                pagosRealizados: result.pagosRealizados,
-                formData: snapshot
-            });
-
-            if (historial.length > maximo) {
-                historial = historial.slice(0, maximo);
-            }
-
-            safeWriteJSON(STORAGE_KEYS.history, historial);
-            renderHistory();
-        }
-
-        function renderHistory() {
-            const container = document.getElementById("historialLista");
-            if (!historial.length) {
-                container.innerHTML = '<p class="history-empty">No hay calculos recientes.</p>';
-                return;
-            }
-
-            container.innerHTML = historial.map((item, index) => {
-                return [
-                    '<article class="history-item">',
-                    "<div>",
-                    '<p class="history-title">' + escapeHtml(item.nombre || "Sin nombre") + " - " + escapeHtml(item.id || "Sin ID") + "</p>",
-                    '<p class="history-meta">' +
-                    "Balance: " + currency.format(Number(item.balance || 0)) +
-                    " | Pagos: " + Number(item.pagosRealizados || 0) +
-                    " | Tipo: " + escapeHtml(item.tipo || "-") +
-                    " | " + escapeHtml(item.fecha || "-") +
-                    "</p>",
-                    "</div>",
-                    '<div class="history-actions">',
-                    '<button class="btn btn-secondary" type="button" data-history-load="' + index + '">Cargar</button>',
-                    '<button class="btn btn-danger" type="button" data-history-delete="' + index + '">Borrar</button>',
-                    "</div>",
-                    "</article>"
-                ].join("");
-            }).join("");
-        }
-
-        function cargarDesdeHistorial(index) {
-            const item = historial[index];
-            if (!item || !item.formData || typeof item.formData !== "object") {
-                showFeedback("No se pudo cargar el item del historial.");
-                return;
-            }
-
-            restoreSnapshot(item.formData);
-            setTipo(item.formData.tipo || item.tipo || "frecuencia", false);
-            calcular();
-        }
-
-        function eliminarItemHistorial(index) {
-            if (!Number.isInteger(index) || index < 0 || index >= historial.length) {
-                return;
-            }
-
-            historial.splice(index, 1);
-            safeWriteJSON(STORAGE_KEYS.history, historial);
-            renderHistory();
-        }
-
-        function limpiarHistorial() {
-            if (!historial.length) {
-                return;
-            }
-
-            const ok = window.confirm("Se eliminara el historial completo. Deseas continuar?");
-            if (!ok) {
-                return;
-            }
-
-            historial = [];
-            safeWriteJSON(STORAGE_KEYS.history, historial);
-            renderHistory();
-        }
-
-        function saveLastData() {
-            safeWriteJSON(STORAGE_KEYS.lastData, collectSnapshot());
-        }
-
-        function loadLastData() {
-            const saved = safeReadJSON(STORAGE_KEYS.lastData, null);
-            if (!saved || typeof saved !== "object") {
-                return;
-            }
-
-            restoreSnapshot(saved);
-            setTipo(saved.tipo || "frecuencia", false);
-        }
-
-        function collectSnapshot() {
-            const snapshot = { tipo: tipoActual };
-            FIELD_IDS.forEach((id) => {
-                const element = document.getElementById(id);
-                if (element) {
-                    snapshot[id] = element.value;
+            if (total === 1) {
+                const singleAmount = getInstallmentAmountByIndex(0, 1, regularAmount, initialAmount, finalAmount);
+                if (paid === 1) {
+                    return singleAmount;
                 }
-            });
-            return snapshot;
-        }
+                return singleAmount + ((paid - 1) * regularAmount);
+            }
 
-        function restoreSnapshot(snapshot) {
-            FIELD_IDS.forEach((id) => {
-                if (Object.prototype.hasOwnProperty.call(snapshot, id)) {
-                    setValue(id, String(snapshot[id] ?? ""));
-                }
-            });
+            const first = getInstallmentAmountByIndex(0, total, regularAmount, initialAmount, finalAmount);
+            const fullPlanTotal = plannedTotalForInstallments(total, regularAmount, initialAmount, finalAmount);
+
+            if (paid === 1) {
+                return first;
+            }
+
+            if (paid < total) {
+                return first + ((paid - 1) * regularAmount);
+            }
+
+            if (paid === total) {
+                return fullPlanTotal;
+            }
+
+            return fullPlanTotal + ((paid - total) * regularAmount);
         }
 
         function parseCalendarLines(text) {
-            const rawLines = String(text || "")
+            const lines = String(text || "")
                 .split(/\r?\n/)
                 .map((line) => line.trim())
                 .filter(Boolean);
 
-            const set = new Set();
+            const unique = new Set();
             const dates = [];
-            const invalid = [];
+            const invalidLines = [];
 
-            rawLines.forEach((line) => {
-                const date = parseISODate(line);
-                if (!date) {
-                    invalid.push(line);
+            lines.forEach((line) => {
+                const parsed = parseISODate(line);
+                if (!parsed) {
+                    invalidLines.push(line);
                     return;
                 }
-
-                const key = formatISODate(date);
-                if (!set.has(key)) {
-                    set.add(key);
-                    dates.push(date);
+                const key = formatISODate(parsed);
+                if (!unique.has(key)) {
+                    unique.add(key);
+                    dates.push(parsed);
                 }
             });
 
             dates.sort((a, b) => a.getTime() - b.getTime());
+            return { dates, invalidLines };
+        }
 
-            if (invalid.length) {
-                showFeedback("Hay fechas invalidas en calendario: " + invalid.slice(0, 3).join(", ") + (invalid.length > 3 ? "..." : ""));
+        function toNumber(value, allowEmpty = false) {
+            const raw = String(value ?? "").trim();
+            if (allowEmpty && raw === "") {
+                return 0;
             }
-
-            return dates;
+            return Number(raw.replace(",", "."));
         }
 
-        function normalizeHistory(value) {
-            if (!Array.isArray(value)) {
-                return [];
+        function toNumberOrNull(value) {
+            const raw = String(value ?? "").trim();
+            if (!raw) {
+                return null;
             }
-            return value.filter((item) => item && typeof item === "object");
+            const parsed = Number(raw.replace(",", "."));
+            return Number.isFinite(parsed) ? parsed : null;
         }
 
-        function hideResults() {
-            document.getElementById("results").classList.add("hidden");
-            document.getElementById("calendarioResults").classList.add("hidden");
-        }
-
-        function parseInputNumber(id) {
-            const raw = document.getElementById(id).value.trim().replace(",", ".");
-            return Number(raw);
-        }
-
-        function setValue(id, value) {
-            const element = document.getElementById(id);
-            if (element) {
-                element.value = value;
+        function toIntegerOrNull(value) {
+            const raw = String(value ?? "").trim();
+            if (!raw) {
+                return null;
             }
+            const parsed = Number(raw);
+            return Number.isFinite(parsed) ? Math.floor(parsed) : null;
+        }
+
+        function todayDate() {
+            const now = new Date();
+            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
         }
 
         function parseISODate(value) {
             if (!/^\d{4}-\d{2}-\d{2}$/.test(String(value))) {
                 return null;
             }
-
-            const parts = value.split("-").map(Number);
-            const year = parts[0];
-            const month = parts[1];
-            const day = parts[2];
-
+            const [year, month, day] = String(value).split("-").map(Number);
             const date = new Date(year, month - 1, day);
             date.setHours(0, 0, 0, 0);
-
-            if (
-                date.getFullYear() !== year ||
-                date.getMonth() !== month - 1 ||
-                date.getDate() !== day
-            ) {
+            if (date.getFullYear() !== year || date.getMonth() !== month - 1 || date.getDate() !== day) {
                 return null;
             }
-
             return date;
+        }
+
+        function addDays(date, days) {
+            const out = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+            out.setDate(out.getDate() + Number(days || 0));
+            out.setHours(0, 0, 0, 0);
+            return out;
+        }
+
+        function addMonthsSafe(date, monthsToAdd) {
+            const base = new Date(date.getFullYear(), date.getMonth(), 1);
+            base.setMonth(base.getMonth() + Number(monthsToAdd || 0));
+            const monthEnd = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
+            base.setDate(Math.min(date.getDate(), monthEnd));
+            base.setHours(0, 0, 0, 0);
+            return base;
+        }
+
+        function diffInDays(fromDate, toDate) {
+            const msPerDay = 86400000;
+            const from = new Date(fromDate.getFullYear(), fromDate.getMonth(), fromDate.getDate()).getTime();
+            const to = new Date(toDate.getFullYear(), toDate.getMonth(), toDate.getDate()).getTime();
+            return Math.floor((to - from) / msPerDay);
         }
 
         function formatISODate(date) {
@@ -1584,58 +2079,6 @@
                 String(date.getMonth() + 1).padStart(2, "0"),
                 String(date.getDate()).padStart(2, "0")
             ].join("-");
-        }
-
-        function getTodayISO() {
-            return formatISODate(new Date());
-        }
-
-        function addDays(date, days) {
-            const next = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-            next.setDate(next.getDate() + Number(days || 0));
-            next.setHours(0, 0, 0, 0);
-            return next;
-        }
-
-        function addMonthsSafe(date, monthsToAdd) {
-            const monthDate = new Date(date.getFullYear(), date.getMonth(), 1);
-            monthDate.setMonth(monthDate.getMonth() + Number(monthsToAdd || 0));
-            const lastDay = new Date(monthDate.getFullYear(), monthDate.getMonth() + 1, 0).getDate();
-            monthDate.setDate(Math.min(date.getDate(), lastDay));
-            monthDate.setHours(0, 0, 0, 0);
-            return monthDate;
-        }
-
-        function getCalendarFrequencyConfig() {
-            const value = document.getElementById("frecuenciaCalendario")?.value || "quincenal";
-            if (value === "semanal") {
-                return {
-                    days: 7,
-                    label: "semanales",
-                    getDateAt: (start, index) => addDays(start, index * 7)
-                };
-            }
-
-            if (value === "mensual") {
-                return {
-                    days: 30,
-                    label: "mensuales",
-                    getDateAt: (start, index) => addMonthsSafe(start, index)
-                };
-            }
-
-            return {
-                days: 14,
-                label: "quincenales",
-                getDateAt: (start, index) => addDays(start, index * 14)
-            };
-        }
-
-        function diffInDays(start, end) {
-            const msPerDay = 86400000;
-            const startTime = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
-            const endTime = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
-            return Math.floor((endTime - startTime) / msPerDay);
         }
 
         function formatDisplayDate(date) {
@@ -1649,33 +2092,17 @@
             return Math.min(max, Math.max(min, value));
         }
 
-        function safeReadJSON(key, fallback) {
-            try {
-                const raw = localStorage.getItem(key);
-                if (!raw) {
-                    return fallback;
-                }
-                return JSON.parse(raw);
-            } catch (error) {
-                return fallback;
+        function setText(id, text) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.textContent = text;
             }
         }
 
-        function safeWriteJSON(key, data) {
-            try {
-                localStorage.setItem(key, JSON.stringify(data));
-                return true;
-            } catch (error) {
-                return false;
-            }
-        }
-
-        function safeRemove(key) {
-            try {
-                localStorage.removeItem(key);
-                return true;
-            } catch (error) {
-                return false;
+        function setValue(id, value) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.value = String(value ?? "");
             }
         }
 
@@ -1692,6 +2119,32 @@
             box.className = "feedback hidden";
         }
 
+        function readJSON(key, fallback) {
+            try {
+                const raw = localStorage.getItem(key);
+                if (!raw) {
+                    return fallback;
+                }
+                const parsed = JSON.parse(raw);
+                return parsed === null ? fallback : parsed;
+            } catch (_error) {
+                return fallback;
+            }
+        }
+
+        function writeJSON(key, value) {
+            try {
+                if (value === null || value === undefined) {
+                    localStorage.removeItem(key);
+                } else {
+                    localStorage.setItem(key, JSON.stringify(value));
+                }
+                return true;
+            } catch (_error) {
+                return false;
+            }
+        }
+
         function escapeHtml(value) {
             return String(value)
                 .replace(/&/g, "&amp;")
@@ -1699,20 +2152,6 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#39;");
-        }
-
-        function generarCalendarioEjemplo() {
-            const inicio = parseISODate(document.getElementById("primeraFechaPago").value) || addDays(parseISODate(getTodayISO()), -120);
-            const total = Number(document.getElementById("numeroTotalPagos").value || "19");
-            const count = Number.isInteger(total) && total > 0 ? total : 19;
-            const frecuenciaConfig = getCalendarFrequencyConfig();
-            const fechas = [];
-
-            for (let i = 0; i < count; i += 1) {
-                fechas.push(formatISODate(frecuenciaConfig.getDateAt(inicio, i)));
-            }
-
-            document.getElementById("calendarioPagos").value = fechas.join("\n");
         }
     </script>
 </body>
